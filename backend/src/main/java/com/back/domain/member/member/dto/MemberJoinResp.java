@@ -10,7 +10,7 @@ public record MemberJoinResp(
         long id,
         String name,
         Role role,
-        Status Status,
+        Status status,
         LocalDateTime createDate
 ) {
     public MemberJoinResp(Member member) {

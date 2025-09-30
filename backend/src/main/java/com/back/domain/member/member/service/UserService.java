@@ -5,9 +5,11 @@ import com.back.domain.member.member.entity.Member;
 import com.back.domain.member.member.repository.MemberRepository;
 import com.back.global.exception.ServiceException;
 import jakarta.validation.Valid;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +26,7 @@ public class UserService {
 
         //비밀번호 확인
         if(!reqBody.password().equals(reqBody.passwordConfirm())) {
-            throw new ServiceException("400-1", "비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+            throw new ServiceException("400-2", "비밀번호와 비밀번호 확인이 일치하지 않습니다.");
         }
 
         //비밀번호 암호화
@@ -41,5 +43,9 @@ public class UserService {
 
         //DB 반영 후 반환
         return memberRepository.save(member);
+    }
+
+    public Optional<Member> findByUsername(String username) {
+        return memberRepository.findByUsername(username);
     }
 }
