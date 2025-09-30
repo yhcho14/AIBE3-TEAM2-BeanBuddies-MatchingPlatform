@@ -1,7 +1,9 @@
 package com.back.domain.project.project.service;
 
 import com.back.domain.project.project.entity.Project;
+import com.back.domain.project.project.repository.ProjectInterestRepository;
 import com.back.domain.project.project.repository.ProjectRepository;
+import com.back.domain.project.project.repository.ProjectSkillRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProjectService {
     private final ProjectRepository projectRepository;
+    private final ProjectInterestRepository projectInterestRepository;
+    private final ProjectSkillRepository projectSkillRepository;
 
     public Project create(
             String title,
