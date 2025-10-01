@@ -48,6 +48,6 @@ public class Freelancer {
     @OneToMany(mappedBy = "freelancer")
     private List<FreelancerSkill> skills = new ArrayList<>();
 
-    @OneToMany(mappedBy = "interest")
+    @OneToMany(mappedBy = "freelancer")
     private List<FreelancerInterest> interests = new ArrayList<>();
 }
