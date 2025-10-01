@@ -93,4 +93,12 @@ public class ProjectService {
         projectInterestRepository.deleteAllByProject(project);
         projectRepository.delete(project);
     }
+
+    public List<ProjectSkill> findProjectSkillAllByProject(Project project) {
+        return projectSkillRepository.findAllByProject(project);
+    }
+
+    public List<ProjectInterest> findProjectInterestAllByProject(Project project) {
+        return projectInterestRepository.findAllByProject(project);
+    }
 }

@@ -13,4 +13,6 @@ public interface ProjectSkillRepository extends JpaRepository<ProjectSkill, Proj
     List<ProjectSkill> findAllByProject_Id(Long projectId);
 
     void deleteAllByProject(Project project);
+
+    List<ProjectSkill> findAllByProject(Project project);
 }

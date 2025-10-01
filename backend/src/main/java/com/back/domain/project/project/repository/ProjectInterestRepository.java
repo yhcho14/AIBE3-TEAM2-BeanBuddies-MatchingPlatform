@@ -13,4 +13,6 @@ public interface ProjectInterestRepository extends JpaRepository<ProjectInterest
     List<ProjectInterest> findAllByProject_Id(long projectId);
 
     void deleteAllByProject(Project project);
+
+    List<ProjectInterest> findAllByProject(Project project);
 }
