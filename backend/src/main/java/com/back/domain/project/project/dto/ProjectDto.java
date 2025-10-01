@@ -17,10 +17,13 @@ public record ProjectDto(
         BigDecimal price,
         String preferredCondition,
         String payCondition,
+        String workingCondition,
         String description,
+        LocalDateTime deadline,
         ProjectStatus status,
         LocalDateTime createDate,
         LocalDateTime modifyDate,
+        String ownerName,
         List<SkillDto> skills,
         List<InterestDto> interests
 ) {
@@ -33,10 +36,13 @@ public record ProjectDto(
                 project.getPrice(),
                 project.getPreferredCondition(),
                 project.getPayCondition(),
+                project.getWorkingCondition(),
                 project.getDescription(),
+                project.getDeadline(),
                 project.getStatus(),
                 project.getCreateDate(),
                 project.getModifyDate(),
+                project.getOwner().getName(),
                 skills,
                 interests
         );
