@@ -4,6 +4,7 @@ import com.back.domain.common.interest.entity.Interest;
 import com.back.domain.common.interest.repository.InterestRepository;
 import com.back.domain.common.skill.entity.Skill;
 import com.back.domain.common.skill.repository.SkillRepository;
+import com.back.domain.project.project.constant.ProjectStatus;
 import com.back.domain.project.project.entity.Project;
 import com.back.domain.project.project.entity.ProjectInterest;
 import com.back.domain.project.project.entity.ProjectSkill;
@@ -100,5 +101,50 @@ public class ProjectService {
 
     public List<ProjectInterest> findProjectInterestAllByProject(Project project) {
         return projectInterestRepository.findAllByProject(project);
+    }
+
+    public void update(
+            Project project,
+            String title,
+            String summary,
+            BigDecimal price,
+            String preferredCondition,
+            String payCondition,
+            String workingCondition,
+            String duration,
+            String description,
+            LocalDateTime deadline,
+            ProjectStatus status,
+            List<Long> skills,
+            List<Long> interests
+    ) {
+        project.modify(
+                title,
+                summary,
+                price,
+                preferredCondition,
+                payCondition,
+                workingCondition,
+                duration,
+                description,
+                deadline,
+                status
+        );
+
+        // ProjectSkill, ProjectInterest 수정 (삭제 후 추가)
+        // 1. ProjectSkill, ProjectInterest 삭제
+        projectSkillRepository.deleteAllByProject(project);
+        projectInterestRepository.deleteAllByProject(project);
+
+        // 2. ProjectSkill, ProjectInterest 새로 추가
+        List<Skill> skillList = skillRepository.findAllById(skills);
+        for (Skill skill : skillList) {
+            projectSkillRepository.save(new ProjectSkill(project, skill));
+        }
+
+        List<Interest> interestList = interestRepository.findAllById(interests);
+        for (Interest interest : interestList) {
+            projectInterestRepository.save(new ProjectInterest(project, interest));
+        }
     }
 }

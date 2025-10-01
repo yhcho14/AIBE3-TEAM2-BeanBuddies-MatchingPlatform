@@ -1,6 +1,8 @@
 package com.back.domain.project.project.controller;
 
 import com.back.domain.project.project.entity.Project;
+import com.back.domain.project.project.entity.ProjectInterest;
+import com.back.domain.project.project.entity.ProjectSkill;
 import com.back.domain.project.project.service.ProjectService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,10 +16,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -152,5 +155,56 @@ class ApiV1ProjectControllerTest {
         // 연관 ProjectSkill/ProjectInterest 삭제 확인
         assertThat(projectService.findProjectSkillAllByProject(project)).isEmpty();
         assertThat(projectService.findProjectInterestAllByProject(project)).isEmpty();
+    }
+
+    @Test
+    @DisplayName("프로젝트 수정")
+    @WithMockUser(username = "user1", roles = {"ADMIN"})
+    void t3() throws  Exception {
+        long id = 1;
+        Project project = projectService.findById(id);
+
+        ResultActions resultActions = mvc.perform(
+                patch("/api/v1/projects/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                        .content("""
+                {
+                    "title": "테스트 프로젝트 update",
+                    "summary": "테스트 요약 update",
+                    "duration": "2개월",
+                    "price": 10000000,
+                    "preferredCondition": "우대 조건  update",
+                    "payCondition": "급여 조건  update",
+                    "workingCondition": "업무 조건  update",
+                    "description": "상세 설명  update",
+                    "deadline": "2026-12-31T23:59:59",
+                    "skills": [1, 2, 3],
+                    "interests": [1, 2, 3]
+                }
+                """)
+        ).andDo(print());
+
+        // 응답 검증
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(ApiV1ProjectController.class))
+                .andExpect(handler().methodName("modify"))
+                .andExpect(jsonPath("$.resultCode").value("200-1"))
+                .andExpect(jsonPath("$.msg").value("%d번 프로젝트가 수정되었습니다.".formatted(project.getId())));
+
+        // DB에서 실제 연결 상태 조회
+        List<ProjectSkill> updatedSkills = projectService.findProjectSkillAllByProject(project);
+        List<ProjectInterest> updatedInterests = projectService.findProjectInterestAllByProject(project);
+
+        // skill 검증
+        assertThat(updatedSkills)
+                .extracting(ps -> ps.getSkill().getId())
+                .containsExactlyInAnyOrder(1L, 2L, 3L);
+
+        // interest 검증
+        assertThat(updatedInterests)
+                .extracting(pi -> pi.getInterest().getId())
+                .containsExactlyInAnyOrder(1L, 2L, 3L);
     }
 }

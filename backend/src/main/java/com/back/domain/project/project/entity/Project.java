@@ -54,4 +54,27 @@ public class Project extends BaseEntity {
         this.deadline = deadline;
         this.status = ProjectStatus.OPEN;
     }
+
+    public void modify(
+            String title,
+            String summary,
+            BigDecimal price,
+            String preferredCondition,
+            String payCondition,
+            String workingCondition,
+            String duration,
+            String description,
+            LocalDateTime deadline,
+            ProjectStatus status) {
+        this.title = title;
+        this.summary = summary;
+        this.price = price;
+        this.preferredCondition = preferredCondition;
+        this.payCondition = payCondition;
+        this.workingCondition = workingCondition;
+        this.duration = duration;
+        this.description = description;
+        this.deadline = deadline;
+        this.status = status;
+    }
 }

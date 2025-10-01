@@ -5,6 +5,7 @@ import com.back.domain.common.interest.service.InterestService;
 import com.back.domain.common.skill.dto.SkillDto;
 import com.back.domain.common.skill.service.SkillService;
 import com.back.domain.project.project.dto.ProjectDto;
+import com.back.domain.project.project.dto.ProjectModifyReqBody;
 import com.back.domain.project.project.dto.ProjectWriteReqBody;
 import com.back.domain.project.project.entity.Project;
 import com.back.domain.project.project.service.ProjectService;
@@ -64,4 +65,32 @@ public class ApiV1ProjectController {
         return new ApiResponse<>("200-1", "%d번 프로젝트가 삭제되었습니다.".formatted(id));
     }
 
+    @PatchMapping("/{id}")
+    @Transactional
+    public ApiResponse<Void> modify(
+            @PathVariable long id,
+            @Valid @RequestBody ProjectModifyReqBody reqBody
+            ) {
+        Project project = projectService.findById(id);
+        projectService.update(
+                project,
+                reqBody.title(),
+                reqBody.summary(),
+                reqBody.price(),
+                reqBody.preferredCondition(),
+                reqBody.payCondition(),
+                reqBody.workingCondition(),
+                reqBody.duration(),
+                reqBody.description(),
+                reqBody.deadline(),
+                reqBody.status(),
+                reqBody.skills(),
+                reqBody.interests()
+        );
+
+        return new ApiResponse<>(
+                "200-1",
+                "%d번 프로젝트가 수정되었습니다.".formatted(project.getId())
+        );
+    }
 }
