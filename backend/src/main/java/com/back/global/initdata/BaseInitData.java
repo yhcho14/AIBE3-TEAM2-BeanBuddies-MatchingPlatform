@@ -86,7 +86,7 @@ public class BaseInitData {
         Member client2 = memberService.findByUsername("client2").get();
 
         projectService.create(
-                client1,
+                client2,
                 "테스트 프로젝트 1",
                 "테스트 요약 1",
                 BigDecimal.valueOf(1_000_000),
