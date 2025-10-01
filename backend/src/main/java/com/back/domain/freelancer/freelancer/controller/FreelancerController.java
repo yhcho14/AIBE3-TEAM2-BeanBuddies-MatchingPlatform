@@ -2,7 +2,6 @@ package com.back.domain.freelancer.freelancer.controller;
 
 import com.back.domain.freelancer.freelancer.dto.FreelancerFilterDto;
 import com.back.domain.freelancer.freelancer.dto.FreelancerSummaryDto;
-import com.back.domain.freelancer.freelancer.entity.Freelancer;
 import com.back.domain.freelancer.freelancer.service.FreelancerService;
 import com.back.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -10,14 +9,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/freelancers")
+@RequestMapping("/api/v1/freelancers")
 public class FreelancerController {
 
     private final FreelancerService freelancerService;
