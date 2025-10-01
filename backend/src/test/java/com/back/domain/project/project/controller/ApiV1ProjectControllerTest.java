@@ -66,13 +66,20 @@ class ApiV1ProjectControllerTest {
                 .andExpect(jsonPath("$.msg").value("%d번 프로젝트가 생성되었습니다.".formatted(project.getId())))
                 .andExpect(jsonPath("$.data.id").value(project.getId()))
                 .andExpect(jsonPath("$.data.title").value("테스트 프로젝트"))
+                // Skills 검증
                 .andExpect(jsonPath("$.data.skills").isArray())
                 .andExpect(jsonPath("$.data.skills.length()").value(2))
                 .andExpect(jsonPath("$.data.skills[0].id").value(1))
+                .andExpect(jsonPath("$.data.skills[0].name").value("Java"))
                 .andExpect(jsonPath("$.data.skills[1].id").value(2))
+                .andExpect(jsonPath("$.data.skills[1].name").value("Spring boot"))
+
+                // Interests 검증
                 .andExpect(jsonPath("$.data.interests").isArray())
                 .andExpect(jsonPath("$.data.interests.length()").value(2))
                 .andExpect(jsonPath("$.data.interests[0].id").value(1))
-                .andExpect(jsonPath("$.data.interests[1].id").value(2));
+                .andExpect(jsonPath("$.data.interests[0].name").value("웹 개발"))
+                .andExpect(jsonPath("$.data.interests[1].id").value(2))
+                .andExpect(jsonPath("$.data.interests[1].name").value("모바일 앱"));
     }
 }
