@@ -13,6 +13,7 @@ public class ResponseAspect {
 
     private final HttpServletResponse response;
 
+
     public ResponseAspect(HttpServletResponse response) {
         this.response  = response;
     }
@@ -36,7 +37,7 @@ public class ResponseAspect {
         // 원래 컨트롤러 메서드 실행 (ex: write() 메서드 실행)
         Object proceed = joinPoint.proceed();
 
-        // 반환값이 RsData라면, 그 안에 있는 statusCode를 HttpServletResponse에 반영
+        // 반환값이 ApiResponse라면, 그 안에 있는 statusCode를 HttpServletResponse에 반영
         ApiResponse<?> apiResponse = (ApiResponse<?>) proceed;
         response.setStatus(apiResponse.statusCode());
 

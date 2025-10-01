@@ -2,6 +2,9 @@ package com.back.global.initdata;
 
 import com.back.domain.member.member.entity.Member;
 import com.back.domain.member.member.service.MemberService;
+import com.back.domain.common.interest.service.InterestService;
+import com.back.domain.common.skill.service.SkillService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
@@ -19,6 +22,9 @@ public class BaseInitData {
     private BaseInitData self;
     private final MemberService memberService;
 
+    private final SkillService skillService;
+    private final InterestService interestService;
+
     @Bean
     ApplicationRunner baseInitDataApplicationRunner() {
         return args -> {
@@ -29,6 +35,15 @@ public class BaseInitData {
 
     @Transactional
     public void work1() {
+        if (skillService.count() > 0) return;
+
+        skillService.create("Java");
+        skillService.create("Spring boot");
+        skillService.create("React");
+
+        interestService.create("웹 개발");
+        interestService.create("모바일 앱");
+        interestService.create("데이터 사이언스");
     }
 
     @Transactional

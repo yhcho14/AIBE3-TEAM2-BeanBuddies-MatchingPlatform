@@ -19,4 +19,8 @@ public class Skill {
     @CreatedDate
     private LocalDateTime createDate;
     private String name;
+
+    public Skill(String name) {
+        this.name = name;
+    }
 }
