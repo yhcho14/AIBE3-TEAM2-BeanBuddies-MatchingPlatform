@@ -2,6 +2,7 @@ package com.back.domain.project.project.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record ProjectWriteReqBody(
         String title,
@@ -11,7 +12,9 @@ public record ProjectWriteReqBody(
         String preferredCondition,
         String payCondition,
         String description,
-        LocalDateTime deadline
+        LocalDateTime deadline,
+        List<Long> skills,
+        List<Long> interests
 ) {
 }
 

@@ -1,10 +1,13 @@
 package com.back.domain.project.project.dto;
 
+import com.back.domain.common.interest.dto.InterestDto;
+import com.back.domain.common.skill.dto.SkillDto;
 import com.back.domain.project.project.constant.ProjectStatus;
 import com.back.domain.project.project.entity.Project;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record ProjectDto(
         Long id,
@@ -17,9 +20,11 @@ public record ProjectDto(
         String description,
         ProjectStatus status,
         LocalDateTime createDate,
-        LocalDateTime modifyDate
+        LocalDateTime modifyDate,
+        List<SkillDto> skills,
+        List<InterestDto> interests
 ) {
-    public ProjectDto (Project project) {
+    public ProjectDto (Project project, List<SkillDto> skills, List<InterestDto> interests) {
         this(
                 project.getId(),
                 project.getTitle(),
@@ -31,7 +36,9 @@ public record ProjectDto(
                 project.getDescription(),
                 project.getStatus(),
                 project.getCreateDate(),
-                project.getModifyDate()
+                project.getModifyDate(),
+                skills,
+                interests
         );
     }
 }

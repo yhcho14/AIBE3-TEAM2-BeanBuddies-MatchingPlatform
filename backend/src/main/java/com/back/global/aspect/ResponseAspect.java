@@ -1,6 +1,6 @@
 package com.back.global.aspect;
 
-import com.back.global.rsData.RsData;
+import com.back.global.response.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -30,7 +30,7 @@ public class ResponseAspect {
      * 즉, REST API 응답을 반환하는 모든 컨트롤러 메서드를 대상으로 함
      */
     @Around("""
-                execution(public com.back.global.rsData.RsData *(..)) &&
+                execution(public com.back.global.response.ApiResponse *(..)) &&
                 (
                     within(@org.springframework.stereotype.Controller *) ||
                     within(@org.springframework.web.bind.annotation.RestController *)
@@ -48,9 +48,9 @@ public class ResponseAspect {
         // 원래 컨트롤러 메서드 실행 (ex: write() 메서드 실행)
         Object proceed = joinPoint.proceed();
 
-        // 반환값이 RsData라면, 그 안에 있는 statusCode를 HttpServletResponse에 반영
-        RsData<?> rsData = (RsData<?>) proceed;
-        response.setStatus(rsData.statusCode());
+        // 반환값이 ApiResponse라면, 그 안에 있는 statusCode를 HttpServletResponse에 반영
+        ApiResponse<?> apiResponse = (ApiResponse<?>) proceed;
+        response.setStatus(apiResponse.statusCode());
 
         // 응답 본문은 그대로 클라이언트에게 전달
         return proceed;

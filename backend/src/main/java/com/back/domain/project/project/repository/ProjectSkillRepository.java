@@ -5,6 +5,9 @@ import com.back.domain.project.project.entity.embeddedId.ProjectSkillId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ProjectSkillRepository extends JpaRepository<ProjectSkill, ProjectSkillId> {
+    List<ProjectSkill> findAllByProject_Id(Long projectId);
 }

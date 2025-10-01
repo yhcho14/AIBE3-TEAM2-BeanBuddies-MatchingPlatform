@@ -19,4 +19,8 @@ public class Interest {
     @CreatedDate
     private LocalDateTime createDate;
     private String name;
+
+    public Interest(String name) {
+        this.name = name;
+    }
 }

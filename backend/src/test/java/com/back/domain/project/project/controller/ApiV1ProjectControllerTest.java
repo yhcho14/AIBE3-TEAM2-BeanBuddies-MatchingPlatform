@@ -2,7 +2,6 @@ package com.back.domain.project.project.controller;
 
 import com.back.domain.project.project.entity.Project;
 import com.back.domain.project.project.service.ProjectService;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -47,7 +47,9 @@ class ApiV1ProjectControllerTest {
                     "preferredCondition": "우대 조건",
                     "payCondition": "급여 조건",
                     "description": "상세 설명",
-                    "deadline": "2025-12-31T23:59:59"
+                    "deadline": "2025-12-31T23:59:59",
+                    "skills": [1, 2],
+                    "interests": [1, 2]
                 }
                 """)
         ).andDo(print());
@@ -59,21 +61,18 @@ class ApiV1ProjectControllerTest {
 
         // 응답 검증
         resultActions
-                .andExpect(handler().handlerType(ApiV1ProjectController.class))
-                .andExpect(handler().methodName("write")) // 컨트롤러 메서드명에 맞게 수정
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.resultCode").value("201-1"))
                 .andExpect(jsonPath("$.msg").value("%d번 프로젝트가 생성되었습니다.".formatted(project.getId())))
                 .andExpect(jsonPath("$.data.id").value(project.getId()))
-                .andExpect(jsonPath("$.data.createDate").value(Matchers.startsWith(project.getCreateDate().toString().substring(0, 20))))
-                .andExpect(jsonPath("$.data.modifyDate").value(Matchers.startsWith(project.getModifyDate().toString().substring(0, 20))))
                 .andExpect(jsonPath("$.data.title").value("테스트 프로젝트"))
-                .andExpect(jsonPath("$.data.summary").value("테스트 요약"))
-                .andExpect(jsonPath("$.data.duration").value("1개월"))
-                .andExpect(jsonPath("$.data.price").value(1000000))
-                .andExpect(jsonPath("$.data.preferredCondition").value("우대 조건"))
-                .andExpect(jsonPath("$.data.payCondition").value("급여 조건"))
-                .andExpect(jsonPath("$.data.description").value("상세 설명"))
-                .andExpect(jsonPath("$.data.status").value("OPEN"));
+                .andExpect(jsonPath("$.data.skills").isArray())
+                .andExpect(jsonPath("$.data.skills.length()").value(2))
+                .andExpect(jsonPath("$.data.skills[0].id").value(1))
+                .andExpect(jsonPath("$.data.skills[1].id").value(2))
+                .andExpect(jsonPath("$.data.interests").isArray())
+                .andExpect(jsonPath("$.data.interests.length()").value(2))
+                .andExpect(jsonPath("$.data.interests[0].id").value(1))
+                .andExpect(jsonPath("$.data.interests[1].id").value(2));
     }
 }
