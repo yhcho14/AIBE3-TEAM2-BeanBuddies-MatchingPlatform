@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/projects")
@@ -104,5 +105,26 @@ public class ApiV1ProjectController {
                 "%d번 프로젝트가 수정되었습니다.".formatted(project.getId()),
                 new ProjectDto(project, skillDtoList, interestDtoList)
         );
+    }
+
+    @GetMapping("/{id}")
+    @Transactional(readOnly = true)
+    public ProjectDto getItem(@PathVariable long id) {
+        Project project = projectService.findById(id);
+        List<SkillDto> skillDtoList = skillService.findByProjectId(id);
+        List<InterestDto> interestDtoList = interestService.findByProjectId(id);
+        return new ProjectDto(project, skillDtoList, interestDtoList);
+    }
+
+    @GetMapping
+    @Transactional(readOnly = true)
+    public List<ProjectDto> getItems() {
+        return projectService.getList().stream()
+                .map(project -> {
+                    List<SkillDto> skillDtoList = skillService.findByProjectId(project.getId());
+                    List<InterestDto> interestDtoList = interestService.findByProjectId(project.getId());
+                    return new ProjectDto(project, skillDtoList, interestDtoList);
+                })
+                .collect(Collectors.toList());
     }
 }
