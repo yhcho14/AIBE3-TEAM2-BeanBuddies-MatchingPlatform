@@ -74,7 +74,7 @@ public class ApiV1ProjectController {
 
     @PatchMapping("/{id}")
     @Transactional
-    public ApiResponse<Void> modify(
+    public ApiResponse<ProjectDto> modify(
             @PathVariable long id,
             @Valid @RequestBody ProjectModifyReqBody reqBody
             ) {
@@ -95,9 +95,14 @@ public class ApiV1ProjectController {
                 reqBody.interests()
         );
 
+        // ProjectSkill, ProjectInterest 연관 데이터 DTO로 변환
+        List<SkillDto> skillDtoList = skillService.findByProjectId(project.getId());
+        List<InterestDto> interestDtoList = interestService.findByProjectId(project.getId());
+
         return new ApiResponse<>(
                 "200-1",
-                "%d번 프로젝트가 수정되었습니다.".formatted(project.getId())
+                "%d번 프로젝트가 수정되었습니다.".formatted(project.getId()),
+                new ProjectDto(project, skillDtoList, interestDtoList)
         );
     }
 }

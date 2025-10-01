@@ -180,19 +180,36 @@ class ApiV1ProjectControllerTest {
                     "workingCondition": "업무 조건  update",
                     "description": "상세 설명  update",
                     "deadline": "2026-12-31T23:59:59",
+                    "status": "IN_PROGRESS",
                     "skills": [1, 2, 3],
                     "interests": [1, 2, 3]
                 }
                 """)
         ).andDo(print());
 
-        // 응답 검증
+        // 응답 검증 (업데이트된 값 기준)
         resultActions
                 .andExpect(status().isOk())
                 .andExpect(handler().handlerType(ApiV1ProjectController.class))
                 .andExpect(handler().methodName("modify"))
                 .andExpect(jsonPath("$.resultCode").value("200-1"))
-                .andExpect(jsonPath("$.msg").value("%d번 프로젝트가 수정되었습니다.".formatted(project.getId())));
+                .andExpect(jsonPath("$.msg").value("%d번 프로젝트가 수정되었습니다.".formatted(project.getId())))
+                .andExpect(jsonPath("$.data.id").value(project.getId()))
+                .andExpect(jsonPath("$.data.title").value("테스트 프로젝트 update"))
+                .andExpect(jsonPath("$.data.summary").value("테스트 요약 update"))
+                .andExpect(jsonPath("$.data.duration").value("2개월"))
+                .andExpect(jsonPath("$.data.price").value(10000000))
+                .andExpect(jsonPath("$.data.preferredCondition").value("우대 조건  update"))
+                .andExpect(jsonPath("$.data.payCondition").value("급여 조건  update"))
+                .andExpect(jsonPath("$.data.workingCondition").value("업무 조건  update"))
+                .andExpect(jsonPath("$.data.description").value("상세 설명  update"))
+                .andExpect(jsonPath("$.data.deadline").value("2026-12-31T23:59:59"))
+                .andExpect(jsonPath("$.data.skills").isArray())
+                .andExpect(jsonPath("$.data.skills.length()").value(3))
+                .andExpect(jsonPath("$.data.interests").isArray())
+                .andExpect(jsonPath("$.data.interests.length()").value(3))
+                .andExpect(jsonPath("$.data.ownerName").value("클라이언트2"))
+                .andExpect(jsonPath("$.data.status").value("IN_PROGRESS"));
 
         // DB에서 실제 연결 상태 조회
         List<ProjectSkill> updatedSkills = projectService.findProjectSkillAllByProject(project);
