@@ -4,6 +4,8 @@ import com.back.domain.common.interest.dto.InterestDto;
 import com.back.domain.common.interest.service.InterestService;
 import com.back.domain.common.skill.dto.SkillDto;
 import com.back.domain.common.skill.service.SkillService;
+import com.back.domain.member.member.entity.Member;
+import com.back.domain.member.member.service.MemberService;
 import com.back.domain.project.project.dto.ProjectDto;
 import com.back.domain.project.project.dto.ProjectModifyReqBody;
 import com.back.domain.project.project.dto.ProjectWriteReqBody;
@@ -23,13 +25,18 @@ import java.util.List;
 // @Tag(name="ApiV1ProjectController", description = "API 프로젝트 컨트롤러")
 public class ApiV1ProjectController {
     private final ProjectService projectService;
+    private final MemberService memberService;
     private final SkillService skillService;
     private final InterestService interestService;
 
     @PostMapping
     @Transactional
     public ApiResponse<ProjectDto> write(@Valid @RequestBody ProjectWriteReqBody reqBody) {
+        // 임시로 회원 데이터 1개 가져옴
+        Member member = memberService.findByUsername("client1").get();
+
         Project project = projectService.create(
+                member,
                 reqBody.title(),
                 reqBody.summary(),
                 reqBody.price(),

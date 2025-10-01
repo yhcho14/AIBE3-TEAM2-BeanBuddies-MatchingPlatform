@@ -23,6 +23,7 @@ public record ProjectDto(
         ProjectStatus status,
         LocalDateTime createDate,
         LocalDateTime modifyDate,
+        String ownerName,
         List<SkillDto> skills,
         List<InterestDto> interests
 ) {
@@ -41,6 +42,7 @@ public record ProjectDto(
                 project.getStatus(),
                 project.getCreateDate(),
                 project.getModifyDate(),
+                project.getOwner().getName(),
                 skills,
                 interests
         );

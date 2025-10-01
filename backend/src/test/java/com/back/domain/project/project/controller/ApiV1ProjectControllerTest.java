@@ -83,6 +83,7 @@ class ApiV1ProjectControllerTest {
                 .andExpect(jsonPath("$.data.workingCondition").value("업무 조건"))
                 .andExpect(jsonPath("$.data.description").value("상세 설명"))
                 .andExpect(jsonPath("$.data.deadline").value("2025-12-31T23:59:59"))
+                .andExpect(jsonPath("$.data.ownerName").value("클라이언트1"))
 
 
                 // Skills 검증

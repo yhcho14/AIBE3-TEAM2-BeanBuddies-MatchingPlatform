@@ -82,7 +82,11 @@ public class BaseInitData {
         List<Long> skillIds3 = List.of(1L, 2L, 3L);
         List<Long> interestIds3 = List.of(1L, 2L, 3L);
 
+        Member client1 = memberService.findByUsername("client1").get();
+        Member client2 = memberService.findByUsername("client2").get();
+
         projectService.create(
+                client1,
                 "테스트 프로젝트 1",
                 "테스트 요약 1",
                 BigDecimal.valueOf(1_000_000),
@@ -97,6 +101,7 @@ public class BaseInitData {
         );
 
         projectService.create(
+                client1,
                 "테스트 프로젝트 2",
                 "테스트 요약 2",
                 BigDecimal.valueOf(2_000_000),
@@ -111,6 +116,7 @@ public class BaseInitData {
         );
 
         projectService.create(
+                client1,
                 "테스트 프로젝트 3",
                 "테스트 요약 3",
                 BigDecimal.valueOf(3_000_000),

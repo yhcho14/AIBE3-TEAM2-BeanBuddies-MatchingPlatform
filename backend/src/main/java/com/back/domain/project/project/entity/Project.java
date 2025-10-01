@@ -1,11 +1,9 @@
 package com.back.domain.project.project.entity;
 
+import com.back.domain.member.member.entity.Member;
 import com.back.domain.project.project.constant.ProjectStatus;
 import com.back.global.jpa.entity.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -32,8 +30,13 @@ public class Project extends BaseEntity {
     private String workingCondition;
     // 기술, 관심 분야의 경우 다른 entity로 생성하여 관리 예정
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member owner;
+
 
     public Project(
+            Member owner,
             String title,
             String summary,
             BigDecimal price,
@@ -43,6 +46,7 @@ public class Project extends BaseEntity {
             String duration,
             String description,
             LocalDateTime deadline) {
+        this.owner = owner;
         this.title = title;
         this.summary = summary;
         this.price = price;

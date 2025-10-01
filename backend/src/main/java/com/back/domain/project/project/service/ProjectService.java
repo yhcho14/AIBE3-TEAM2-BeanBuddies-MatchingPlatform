@@ -4,6 +4,7 @@ import com.back.domain.common.interest.entity.Interest;
 import com.back.domain.common.interest.repository.InterestRepository;
 import com.back.domain.common.skill.entity.Skill;
 import com.back.domain.common.skill.repository.SkillRepository;
+import com.back.domain.member.member.entity.Member;
 import com.back.domain.project.project.constant.ProjectStatus;
 import com.back.domain.project.project.entity.Project;
 import com.back.domain.project.project.entity.ProjectInterest;
@@ -36,6 +37,7 @@ public class ProjectService {
     }
 
     public Project create(
+            Member owner,
             String title,
             String summary,
             BigDecimal price,
@@ -49,6 +51,7 @@ public class ProjectService {
             List<Long> interests
     ) {
         Project project = new Project(
+                owner,
                 title,
                 summary,
                 price,
