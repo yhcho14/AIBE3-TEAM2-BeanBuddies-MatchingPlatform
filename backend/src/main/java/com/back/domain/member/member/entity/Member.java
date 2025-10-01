@@ -1,7 +1,7 @@
 package com.back.domain.member.member.entity;
 
 import com.back.domain.member.member.constant.Role;
-import com.back.domain.member.member.constant.Status;
+import com.back.domain.member.member.constant.MemberStatus;
 import com.back.global.jpa.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,7 +36,7 @@ public class Member extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Status status = Status.ACTIVE;
+    private MemberStatus status;
 
     private LocalDateTime deleteDate;
 
@@ -46,9 +46,10 @@ public class Member extends BaseEntity {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.status = MemberStatus.valueOf("ACTIVE");
     }
 
     public void changeStatus(String status) {
-        this.status = Status.valueOf(status);
+        this.status = MemberStatus.valueOf(status);
     }
 }
