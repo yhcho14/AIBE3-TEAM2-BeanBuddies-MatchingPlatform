@@ -40,4 +40,13 @@ public class MemberService {
     public Optional<Member> findByUsername(String username) {
         return memberRepository.findByUsername(username);
     }
+
+    public long count() {
+        return memberRepository.count();
+    }
+
+    public Member changeStatus(Member member, String status) {
+        member.changeStatus(status);
+        return member;
+    }
 }

@@ -47,4 +47,8 @@ public class Member extends BaseEntity {
         this.password = password;
         this.email = email;
     }
+
+    public void changeStatus(String status) {
+        this.status = Status.valueOf(status);
+    }
 }
