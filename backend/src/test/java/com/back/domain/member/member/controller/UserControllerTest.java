@@ -2,7 +2,7 @@ package com.back.domain.member.member.controller;
 
 import com.back.domain.member.member.dto.MemberJoinReq;
 import com.back.domain.member.member.entity.Member;
-import com.back.domain.member.member.service.UserService;
+import com.back.domain.member.member.service.MemberService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ public class UserControllerTest {
     @Autowired
     private MockMvc mvc;
     @Autowired
-    private UserService userService;
+    private MemberService userService;
 
     @Test
     @DisplayName("회원가입 성공")
@@ -54,7 +54,7 @@ public class UserControllerTest {
 
         resultActions
                 //실행처 확인
-                .andExpect(handler().handlerType(UserController.class))
+                .andExpect(handler().handlerType(MemberController.class))
                 .andExpect(handler().methodName("join"))
 
                 //상태 코드 확인
@@ -92,7 +92,7 @@ public class UserControllerTest {
 
         resultActions
                 //실행처 확인
-                .andExpect(handler().handlerType(UserController.class))
+                .andExpect(handler().handlerType(MemberController.class))
                 .andExpect(handler().methodName("join"))
 
                 //상태 코드 확인
@@ -128,7 +128,7 @@ public class UserControllerTest {
 
         resultActions
                 //실행처 확인
-                .andExpect(handler().handlerType(UserController.class))
+                .andExpect(handler().handlerType(MemberController.class))
                 .andExpect(handler().methodName("join"))
 
                 //상태 코드 확인
@@ -160,7 +160,7 @@ public class UserControllerTest {
 
         resultActions
                 //실행처 확인
-                .andExpect(handler().handlerType(UserController.class))
+                .andExpect(handler().handlerType(MemberController.class))
                 .andExpect(handler().methodName("join"))
 
                 //상태 코드 확인
