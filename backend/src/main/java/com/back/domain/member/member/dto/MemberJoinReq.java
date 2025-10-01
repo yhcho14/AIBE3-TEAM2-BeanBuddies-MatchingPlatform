@@ -17,4 +17,5 @@ public record MemberJoinReq(
         String passwordConfirm,
         @NotBlank @Email
         String email
-) { }
+) {
+}

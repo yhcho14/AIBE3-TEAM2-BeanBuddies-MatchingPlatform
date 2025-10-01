@@ -23,7 +23,7 @@ public class MemberService {
                 });
 
         //비밀번호 확인
-        if(!password.equals(passwordConfirm)) {
+        if (!password.equals(passwordConfirm)) {
             throw new ServiceException("400-2", "비밀번호와 비밀번호 확인이 일치하지 않습니다.");
         }
 

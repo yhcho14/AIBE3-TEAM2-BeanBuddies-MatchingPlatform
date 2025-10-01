@@ -34,7 +34,7 @@ public class BaseInitData {
     @Transactional
     public void addMember() {
 
-        if(memberService.count() > 0) return;
+        if (memberService.count() > 0) return;
 
         //임의 데이터 추가
         Member admin = memberService.join("ADMIN", "관리자", "admin", "1234", "1234", "test@test.com");

@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-public class UserControllerTest {
+public class MemberControllerTest {
     @Autowired
     private MockMvc mvc;
     @Autowired
@@ -78,15 +78,15 @@ public class UserControllerTest {
                 post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                            {
-                                    "role": "CLIENT",
-                                    "name" : "유저new",
-                                    "username" : "userNew",
-                                    "password" : "1234",
-                                    "passwordConfirm" : "12345",
-                                    "email" : " "
-                            }
-                            """)
+                                {
+                                        "role": "CLIENT",
+                                        "name" : "유저new",
+                                        "username" : "userNew",
+                                        "password" : "1234",
+                                        "passwordConfirm" : "12345",
+                                        "email" : " "
+                                }
+                                """)
         ).andDo(print());
 
         resultActions
@@ -114,15 +114,15 @@ public class UserControllerTest {
                 post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                            {
-                                    "role": "FREELANCER",
-                                    "name" : "유저new2",
-                                    "username" : "userNew",
-                                    "password" : "1234",
-                                    "passwordConfirm" : "1234",
-                                    "email" : "test@test.com"
-                            }
-                            """)
+                                {
+                                        "role": "FREELANCER",
+                                        "name" : "유저new2",
+                                        "username" : "userNew",
+                                        "password" : "1234",
+                                        "passwordConfirm" : "1234",
+                                        "email" : "test@test.com"
+                                }
+                                """)
         ).andDo(print());
 
         resultActions
@@ -146,15 +146,15 @@ public class UserControllerTest {
                 post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                            {
-                                    "role": "CLIENT",
-                                    "name" : "유저new",
-                                    "username" : "userNew",
-                                    "password" : "1234",
-                                    "passwordConfirm" : "12345",
-                                    "email" : "test@test.com"
-                            }
-                            """)
+                                {
+                                        "role": "CLIENT",
+                                        "name" : "유저new",
+                                        "username" : "userNew",
+                                        "password" : "1234",
+                                        "passwordConfirm" : "12345",
+                                        "email" : "test@test.com"
+                                }
+                                """)
         ).andDo(print());
 
         resultActions
