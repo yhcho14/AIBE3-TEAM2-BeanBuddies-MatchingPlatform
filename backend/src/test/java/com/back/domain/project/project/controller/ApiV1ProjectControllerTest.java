@@ -5,6 +5,7 @@ import com.back.domain.project.project.entity.ProjectInterest;
 import com.back.domain.project.project.entity.ProjectSkill;
 import com.back.domain.project.project.service.ProjectService;
 import com.back.global.exception.ServiceException;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -225,5 +226,68 @@ class ApiV1ProjectControllerTest {
         assertThat(updatedInterests)
                 .extracting(pi -> pi.getInterest().getId())
                 .containsExactlyInAnyOrder(1L, 2L, 3L);
+    }
+
+    @Test
+    @DisplayName("프로젝트 단건조회")
+    void t4() throws Exception {
+        long id = 1;
+
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/api/v1/projects/" + id)
+                )
+                .andDo(print());
+
+        Project project = projectService.findById(id);
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(ApiV1ProjectController.class))
+                .andExpect(handler().methodName("getItem"))
+                .andExpect(jsonPath("$.id").value(project.getId()))
+                .andExpect(jsonPath("$.title").value(project.getTitle()))
+                .andExpect(jsonPath("$.summary").value(project.getSummary()))
+                .andExpect(jsonPath("$.duration").value(project.getDuration()))
+                .andExpect(jsonPath("$.price").value(project.getPrice().doubleValue()))
+                .andExpect(jsonPath("$.preferredCondition").value(project.getPreferredCondition()))
+                .andExpect(jsonPath("$.payCondition").value(project.getPayCondition()))
+                .andExpect(jsonPath("$.workingCondition").value(project.getWorkingCondition()))
+                .andExpect(jsonPath("$.description").value(project.getDescription()))
+                .andExpect(jsonPath("$.deadline").value(Matchers.startsWith(project.getDeadline().toString().substring(0, 20))))
+                .andExpect(jsonPath("$.ownerName").value(project.getOwner().getName()))
+                .andExpect(jsonPath("$.status").value(project.getStatus().toString()))
+                .andExpect(jsonPath("$.createDate").value(Matchers.startsWith(project.getCreateDate().toString().substring(0, 20))))
+                .andExpect(jsonPath("$.modifyDate").value(Matchers.startsWith(project.getModifyDate().toString().substring(0, 20))));
+
+        // DB에서 실제 리스트 조회
+        List<ProjectSkill> dbSkills = projectService.findProjectSkillAllByProject(project);
+        List<ProjectInterest> dbInterests = projectService.findProjectInterestAllByProject(project);
+
+        // JSON 배열 길이 검증
+        resultActions
+                .andExpect(jsonPath("$.skills", Matchers.hasSize(dbSkills.size())))
+                .andExpect(jsonPath("$.interests", Matchers.hasSize(dbInterests.size())));
+
+        for (int i = 0; i < dbSkills.size(); i++) {
+            ProjectSkill ps = dbSkills.get(i);
+            resultActions
+                    .andExpect(jsonPath(String.format("$.skills[%d].id", i)).value(ps.getSkill().getId()))
+                    .andExpect(jsonPath(String.format("$.skills[%d].name", i)).value(ps.getSkill().getName()));
+        }
+
+        for (int i = 0; i < dbInterests.size(); i++) {
+            ProjectInterest pi = dbInterests.get(i);
+            resultActions
+                    .andExpect(jsonPath(String.format("$.interests[%d].id", i)).value(pi.getInterest().getId()))
+                    .andExpect(jsonPath(String.format("$.interests[%d].name", i)).value(pi.getInterest().getName()));
+        }
+
+    }
+
+    @Test
+    @DisplayName("프로젝트 다건조회")
+    void t5() throws Exception {
+
     }
 }

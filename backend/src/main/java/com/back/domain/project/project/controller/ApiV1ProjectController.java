@@ -105,4 +105,13 @@ public class ApiV1ProjectController {
                 new ProjectDto(project, skillDtoList, interestDtoList)
         );
     }
+
+    @GetMapping("/{id}")
+    @Transactional(readOnly = true)
+    public ProjectDto getItem(@PathVariable long id) {
+        Project project = projectService.findById(id);
+        List<SkillDto> skillDtoList = skillService.findByProjectId(id);
+        List<InterestDto> interestDtoList = interestService.findByProjectId(id);
+        return new ProjectDto(project, skillDtoList, interestDtoList);
+    }
 }
