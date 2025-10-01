@@ -12,13 +12,13 @@ import com.back.domain.project.project.entity.ProjectSkill;
 import com.back.domain.project.project.repository.ProjectInterestRepository;
 import com.back.domain.project.project.repository.ProjectRepository;
 import com.back.domain.project.project.repository.ProjectSkillRepository;
+import com.back.global.exception.ServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -87,7 +87,7 @@ public class ProjectService {
 
     public Project findById(long id) {
         return projectRepository.findById(id).orElseThrow(
-                () -> new NoSuchElementException("해당 프로젝트가 존재하지 않습니다.")
+                () -> new ServiceException("401-1", "해당 프로젝트가 존재하지 않습니다.")
         );
     }
 

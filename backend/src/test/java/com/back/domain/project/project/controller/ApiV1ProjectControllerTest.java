@@ -4,6 +4,7 @@ import com.back.domain.project.project.entity.Project;
 import com.back.domain.project.project.entity.ProjectInterest;
 import com.back.domain.project.project.entity.ProjectSkill;
 import com.back.domain.project.project.service.ProjectService;
+import com.back.global.exception.ServiceException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +62,7 @@ class ApiV1ProjectControllerTest {
 
         // DB에서 가장 최근 프로젝트 조회
         Project project = projectService.findLatest().orElseThrow(
-                () -> new AssertionError("프로젝트가 생성되지 않았습니다.")
+                () -> new ServiceException("401-1", "프로젝트가 생성되지 않았습니다.")
         );
 
         // 응답 검증
