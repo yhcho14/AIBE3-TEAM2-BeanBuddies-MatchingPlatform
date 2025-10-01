@@ -150,4 +150,8 @@ public class ProjectService {
             projectInterestRepository.save(new ProjectInterest(project, interest));
         }
     }
+
+    public List<Project> getList() {
+        return projectRepository.findAll();
+    }
 }
