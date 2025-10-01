@@ -23,7 +23,14 @@ public class MemberController {
     @Transactional
     @PostMapping
     public ApiResponse<MemberJoinResp> join(@Valid @RequestBody MemberJoinReq reqBody) {
-        Member member = userService.join(reqBody);
+        Member member = userService.join(
+                reqBody.role(),
+                reqBody.name(),
+                reqBody.username(),
+                reqBody.password(),
+                reqBody.passwordConfirm(),
+                reqBody.email()
+        );
 
         return new ApiResponse<>(
                 "201-1",

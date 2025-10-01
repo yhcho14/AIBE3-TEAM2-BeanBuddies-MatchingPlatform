@@ -1,6 +1,5 @@
 package com.back.domain.member.member.controller;
 
-import com.back.domain.member.member.dto.MemberJoinReq;
 import com.back.domain.member.member.entity.Member;
 import com.back.domain.member.member.service.MemberService;
 import org.hamcrest.Matchers;
@@ -108,7 +107,7 @@ public class UserControllerTest {
     @DisplayName("회원가입 실패 : 이미 존재하는 회원")
     void t3_join_exception() throws Exception {
 
-        userService.join(new MemberJoinReq("CLIENT", "유저new", "userNew", "1234", "1234", "test@test.com"));
+        userService.join("CLIENT", "유저new", "userNew", "1234", "1234", "test@test.com");
 
         //이미 사용중인 아이디로 회원가입
         ResultActions resultActions = mvc.perform(
