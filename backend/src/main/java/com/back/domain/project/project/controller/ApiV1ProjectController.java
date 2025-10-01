@@ -9,12 +9,10 @@ import com.back.domain.project.project.dto.ProjectWriteReqBody;
 import com.back.domain.project.project.entity.Project;
 import com.back.domain.project.project.service.ProjectService;
 import com.back.global.response.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,13 +27,14 @@ public class ApiV1ProjectController {
 
     @PostMapping
     @Transactional
-    public ApiResponse<ProjectDto> write(@RequestBody ProjectWriteReqBody reqBody) {
+    public ApiResponse<ProjectDto> write(@Valid @RequestBody ProjectWriteReqBody reqBody) {
         Project project = projectService.create(
                 reqBody.title(),
                 reqBody.summary(),
                 reqBody.price(),
                 reqBody.preferredCondition(),
                 reqBody.payCondition(),
+                reqBody.workingCondition(),
                 reqBody.duration(),
                 reqBody.description(),
                 reqBody.deadline(),
@@ -54,4 +53,15 @@ public class ApiV1ProjectController {
                 new ProjectDto(project, skillDtoList, interestDtoList)
         );
     }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ApiResponse<Void> delete(@PathVariable long id) {
+        Project project = projectService.findById(id);
+
+        projectService.delete(project);
+
+        return new ApiResponse<>("200-1", "%d번 프로젝트가 삭제되었습니다.".formatted(id));
+    }
+
 }

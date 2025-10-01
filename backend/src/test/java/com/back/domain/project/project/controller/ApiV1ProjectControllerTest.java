@@ -46,6 +46,7 @@ class ApiV1ProjectControllerTest {
                     "price": 1000000,
                     "preferredCondition": "우대 조건",
                     "payCondition": "급여 조건",
+                    "workingCondition": "업무 조건",
                     "description": "상세 설명",
                     "deadline": "2025-12-31T23:59:59",
                     "skills": [1, 2],
@@ -66,6 +67,18 @@ class ApiV1ProjectControllerTest {
                 .andExpect(jsonPath("$.msg").value("%d번 프로젝트가 생성되었습니다.".formatted(project.getId())))
                 .andExpect(jsonPath("$.data.id").value(project.getId()))
                 .andExpect(jsonPath("$.data.title").value("테스트 프로젝트"))
+                .andExpect(jsonPath("$.data.id").value(project.getId()))
+                .andExpect(jsonPath("$.data.title").value("테스트 프로젝트"))
+                .andExpect(jsonPath("$.data.summary").value("테스트 요약"))
+                .andExpect(jsonPath("$.data.duration").value("1개월"))
+                .andExpect(jsonPath("$.data.price").value(1000000))
+                .andExpect(jsonPath("$.data.preferredCondition").value("우대 조건"))
+                .andExpect(jsonPath("$.data.payCondition").value("급여 조건"))
+                .andExpect(jsonPath("$.data.workingCondition").value("업무 조건"))
+                .andExpect(jsonPath("$.data.description").value("상세 설명"))
+                .andExpect(jsonPath("$.data.deadline").value("2025-12-31T23:59:59"))
+
+
                 // Skills 검증
                 .andExpect(jsonPath("$.data.skills").isArray())
                 .andExpect(jsonPath("$.data.skills.length()").value(2))
@@ -81,5 +94,37 @@ class ApiV1ProjectControllerTest {
                 .andExpect(jsonPath("$.data.interests[0].name").value("웹 개발"))
                 .andExpect(jsonPath("$.data.interests[1].id").value(2))
                 .andExpect(jsonPath("$.data.interests[1].name").value("모바일 앱"));
+    }
+
+    @Test
+    @DisplayName("프로젝트 등록 (제목 누락)")
+    @WithMockUser(username = "user1", roles = {"ADMIN"})
+    void t1_1() throws Exception {
+        ResultActions resultActions = mvc.perform(
+                post("/api/v1/projects")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                        .content("""
+                {
+                    "title": "",
+                    "summary": "테스트 요약",
+                    "duration": "1개월",
+                    "price": 1000000,
+                    "preferredCondition": "우대 조건",
+                    "payCondition": "급여 조건",
+                    "workingCondition": "업무 조건",
+                    "description": "상세 설명",
+                    "deadline": "2025-12-31T23:59:59",
+                    "skills": [1, 2],
+                    "interests": [1, 2]
+                }
+                """)
+        ).andDo(print());
+
+        // 응답 검증
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.resultCode").value("400-1"))
+                .andExpect(jsonPath("$.msg").value("title-NotBlank-제목은 필수입니다."));
     }
 }

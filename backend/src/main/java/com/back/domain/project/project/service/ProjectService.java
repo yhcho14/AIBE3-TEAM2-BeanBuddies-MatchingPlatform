@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -29,12 +30,17 @@ public class ProjectService {
     private final ProjectInterestRepository projectInterestRepository;
     private final ProjectSkillRepository projectSkillRepository;
 
+    public long count() {
+        return projectRepository.count();
+    }
+
     public Project create(
             String title,
             String summary,
             BigDecimal price,
             String preferredCondition,
             String payCondition,
+            String workingCondition,
             String duration,
             String description,
             LocalDateTime deadline,
@@ -47,6 +53,7 @@ public class ProjectService {
                 price,
                 preferredCondition,
                 payCondition,
+                workingCondition,
                 duration,
                 description,
                 deadline
@@ -72,5 +79,18 @@ public class ProjectService {
 
     public Optional<Project> findLatest() {
         return projectRepository.findFirstByOrderByIdDesc();
+    }
+
+    public Project findById(long id) {
+        return projectRepository.findById(id).orElseThrow(
+                () -> new NoSuchElementException("해당 프로젝트가 존재하지 않습니다.")
+        );
+    }
+
+    public void delete(Project project) {
+        // ProjectSkill, ProjectInterest 우선 삭제
+        projectSkillRepository.deleteAllByProject(project);
+        projectInterestRepository.deleteAllByProject(project);
+        projectRepository.delete(project);
     }
 }
