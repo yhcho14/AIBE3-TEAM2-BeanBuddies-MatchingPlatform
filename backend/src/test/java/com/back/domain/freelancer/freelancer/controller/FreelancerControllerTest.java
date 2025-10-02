@@ -105,10 +105,10 @@ class FreelancerControllerTest {
                 .andExpect(handler().methodName("updateFreelancer"))
 
                 //상태 코드 확인
-                .andExpect(status().isNoContent())
+                .andExpect(status().isOk())
 
                 //응답 데이터 확인
-                .andExpect(jsonPath("$.resultCode").value("204"))
+                .andExpect(jsonPath("$.resultCode").value("200"))
                 .andExpect(jsonPath("$.msg").value("프리랜서 정보 변경"))
                 .andExpect(jsonPath("$.data.id").value(id))
                 .andExpect(jsonPath("$.data.job").value("백엔드"))
