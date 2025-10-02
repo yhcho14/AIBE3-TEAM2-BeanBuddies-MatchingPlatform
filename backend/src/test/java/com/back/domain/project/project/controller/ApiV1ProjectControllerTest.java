@@ -352,9 +352,10 @@ class ApiV1ProjectControllerTest {
     @Test
     @DisplayName("검색 조건 없는 경우 → 전체 조회")
     void t6_1() throws Exception {
-        mvc.perform(get("/api/v1/projects")
+        ResultActions resultActions = mvc.perform(get("/api/v1/projects")
                         .param("page", "0")
                         .param("size", "5"))
+
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.content").isArray());
     }
@@ -373,13 +374,17 @@ class ApiV1ProjectControllerTest {
     @Test
     @DisplayName("키워드 조건으로 검색 (제목 포함)")
     void t6_3() throws Exception {
-        mvc.perform(get("/api/v1/projects")
+        ResultActions resultActions = mvc.perform(get("/api/v1/projects")
                         .param("keywordType", "title")
-                        .param("keyword", "테스트")
+                        .param("keyword", "프로젝트 1")
                         .param("page", "0")
                         .param("size", "5"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.content").isArray());
+                        .andDo(print());
+        resultActions
+                .andExpect(jsonPath("$.resultCode").value("200-1"))
+                .andExpect(jsonPath("$.msg").value("조회 성공"))
+                .andExpect(jsonPath("$.data.content").isArray())
+                .andExpect(jsonPath("$.data.content[0].title").value("테스트 프로젝트 1"));
     }
 
     @Test
@@ -469,7 +474,7 @@ class ApiV1ProjectControllerTest {
     }
 
     @Test
-    @DisplayName("skill, interest 필터링 검색")
+    @DisplayName("프로젝트 검색 / skill & interest 필터링")
     void t6_7_1() throws Exception {
         ResultActions resultActions = mvc.perform(get("/api/v1/projects")
                         .param("skillIds", "1", "2", "3")
@@ -486,7 +491,7 @@ class ApiV1ProjectControllerTest {
     }
 
     @Test
-    @DisplayName("skill 필터링 검색")
+    @DisplayName("프로젝트 검색 / skill 필터링")
     void t6_7_2() throws Exception {
         ResultActions resultActions = mvc.perform(get("/api/v1/projects")
                         .param("skillIds", "2", "3")        // skillIds = [Spring boot, React]
@@ -501,7 +506,7 @@ class ApiV1ProjectControllerTest {
     }
 
     @Test
-    @DisplayName("interest 필터링 검색")
+    @DisplayName("프로젝트 검색 / interest 필터링")
     void t6_7_4() throws Exception {
         // 검색 조건: 데이터 사이언스
         ResultActions resultActions = mvc.perform(get("/api/v1/projects")

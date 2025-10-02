@@ -31,7 +31,7 @@ public class InterestService {
         interestRepository.save(interest);
     }
 
-    public List<Interest> findAllById(List<Long> interests) {
-        return interestRepository.findAllById(interests);
+    public List<Interest> findAllById(List<Long> interestsId) {
+        return interestRepository.findAllById(interestsId);
     }
 }
