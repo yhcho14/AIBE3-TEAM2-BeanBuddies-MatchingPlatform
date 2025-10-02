@@ -1,6 +1,6 @@
 package com.back.domain.project.project.entity;
 
-import com.back.domain.member.member.entity.Member;
+import com.back.domain.client.client.entity.Client;
 import com.back.domain.project.project.constant.ProjectStatus;
 import com.back.global.jpa.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -32,8 +32,8 @@ public class Project extends BaseEntity {
     private String workingCondition;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member owner;
+    @JoinColumn(name = "client_id")
+    private Client client;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectSkill> projectSkills = new ArrayList<>();
@@ -43,7 +43,7 @@ public class Project extends BaseEntity {
 
 
     public Project(
-            Member owner,
+            Client client,
             String title,
             String summary,
             BigDecimal price,
@@ -53,7 +53,7 @@ public class Project extends BaseEntity {
             String duration,
             String description,
             LocalDateTime deadline) {
-        this.owner = owner;
+        this.client = client;
         this.title = title;
         this.summary = summary;
         this.price = price;

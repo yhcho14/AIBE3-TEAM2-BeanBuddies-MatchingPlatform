@@ -29,7 +29,7 @@ public record ProjectSummaryDto(
                 project.getTitle(),
                 project.getSummary(),
                 project.getStatus(),
-                project.getOwner().getName(), // 필요시 getter 추가
+                project.getClient().getMember().getName(),
                 project.getDuration(),
                 project.getPrice(),
                 project.getDeadline().toLocalDate(), // LocalDate만 사용
