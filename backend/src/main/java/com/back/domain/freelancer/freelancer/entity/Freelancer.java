@@ -55,16 +55,14 @@ public class Freelancer {
         this.member = member;
     }
 
-    public Freelancer(Member member, String job, String freelancerEmail, String comment, Map<String, Integer> career) {
+    public void join(Member member) {
         this.member = member;
+    }
+
+    public void updateInfo(String job, String freelancerEmail, String comment, Map<String, Integer> career) {
         this.job = job;
         this.freelancerEmail = freelancerEmail;
         this.comment = comment;
         this.career = career;
-        this.ratingAvg = 0.0f;
-    }
-
-    public void join(Member member) {
-        this.member = member;
     }
 }

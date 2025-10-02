@@ -13,7 +13,7 @@ public class ClientService {
 
     private final ClientRepository clientRepository;
 
-    private Client findById(Long id) {
+    public Client findById(Long id) {
         return clientRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("존재하지 않는 클라이언트입니다."));
     }
 

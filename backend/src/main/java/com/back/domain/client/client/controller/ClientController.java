@@ -6,21 +6,24 @@ import com.back.domain.client.client.entity.Client;
 import com.back.domain.client.client.service.ClientService;
 import com.back.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/client")
+@RequestMapping("/api/v1/clients")
 public class ClientController {
 
     private final ClientService clientService;
 
-    @PutMapping
-    public ApiResponse<ClientUpdateResponse> updateClient(ClientUpdateForm info) {
+    @PutMapping("/{id}")
+    public ApiResponse<ClientUpdateResponse> updateClient(@PathVariable Long id,
+                                                          @RequestBody ClientUpdateForm info) {
         Client client = clientService.updateClient(
-                info.id(),
+                id,
                 info.companySize(),
                 info.companyDescription(),
                 info.representative(),

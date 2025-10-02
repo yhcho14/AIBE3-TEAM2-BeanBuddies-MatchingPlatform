@@ -15,7 +15,7 @@ public record FreelancerSummary(
     public FreelancerSummary(Freelancer freelancer) {
         this(
                 freelancer.getMember().getName(),
-                freelancer.getId(),
+                freelancer.getMember().getId(),
                 freelancer.getJob(),
                 freelancer.getRatingAvg(),
                 freelancer.getSkills().stream()
