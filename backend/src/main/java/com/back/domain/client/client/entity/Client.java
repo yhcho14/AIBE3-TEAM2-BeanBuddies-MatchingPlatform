@@ -42,6 +42,7 @@ public class Client {
         this.member = member;
     }
 
+    // 클라이언트 정보 수정
     public void update(String companySize, String companyDescription, String representative,
                        String businessNo, String companyPhone, String companyEmail) {
         this.companySize = companySize;

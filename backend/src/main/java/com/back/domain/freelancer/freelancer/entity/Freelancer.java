@@ -59,6 +59,7 @@ public class Freelancer {
         this.member = member;
     }
 
+    // 프리랜서 정보 수정
     public void updateInfo(String job, String freelancerEmail, String comment, Map<String, Integer> career) {
         this.job = job;
         this.freelancerEmail = freelancerEmail;

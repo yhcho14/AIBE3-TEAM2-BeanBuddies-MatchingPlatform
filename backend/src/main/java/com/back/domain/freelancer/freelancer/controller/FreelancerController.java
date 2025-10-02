@@ -28,6 +28,7 @@ public class FreelancerController {
 
     private final FreelancerService freelancerService;
 
+    // 프리랜서 정보 수정
     @PutMapping("/{id}")
     public ApiResponse<FreelancerUpdateResponse> updateFreelancer(@PathVariable Long id,
                                                                   @RequestBody FreelancerUpdateForm info) {
@@ -48,6 +49,7 @@ public class FreelancerController {
         );
     }
 
+    // 프리랜서 목록 조회
     @GetMapping
     public ApiResponse<Page<FreelancerSummary>> getFreelancers(
             FreelancerFilterDto filter,

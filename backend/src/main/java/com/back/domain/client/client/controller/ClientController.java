@@ -19,6 +19,7 @@ public class ClientController {
 
     private final ClientService clientService;
 
+    // 회원가입 후 정보등록
     @PutMapping("/{id}")
     public ApiResponse<ClientUpdateResponse> updateClient(@PathVariable Long id,
                                                           @RequestBody ClientUpdateForm info) {
