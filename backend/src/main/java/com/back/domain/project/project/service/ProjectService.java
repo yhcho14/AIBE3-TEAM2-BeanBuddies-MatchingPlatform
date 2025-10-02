@@ -1,12 +1,13 @@
 package com.back.domain.project.project.service;
 
+import com.back.domain.client.client.entity.Client;
 import com.back.domain.common.interest.dto.InterestDto;
 import com.back.domain.common.interest.entity.Interest;
 import com.back.domain.common.interest.service.InterestService;
 import com.back.domain.common.skill.dto.SkillDto;
 import com.back.domain.common.skill.entity.Skill;
 import com.back.domain.common.skill.service.SkillService;
-import com.back.domain.member.member.entity.Member;
+import com.back.domain.member.member.service.MemberService;
 import com.back.domain.project.project.constant.ProjectStatus;
 import com.back.domain.project.project.dto.ProjectSearchDto;
 import com.back.domain.project.project.dto.ProjectSummaryDto;
@@ -35,6 +36,7 @@ import java.util.Optional;
 public class ProjectService {
     private final ProjectRepository projectRepository;
 
+    private final MemberService memberService;
     private final InterestService interestService;
     private final SkillService skillService;
 
@@ -46,7 +48,7 @@ public class ProjectService {
     }
 
     public Project create(
-            Member owner,
+            Client client,
             String title,
             String summary,
             BigDecimal price,
@@ -60,7 +62,7 @@ public class ProjectService {
             List<Long> interests
     ) {
         Project project = new Project(
-                owner,
+                client,
                 title,
                 summary,
                 price,
@@ -183,7 +185,8 @@ public class ProjectService {
             }
         }
 
-        // 4. 조회 후 DTO 변환
+
+        // 조회 후 DTO 변환
         return projectRepository.findAll(spec, pageable)
                 .map(project -> {
                     List<SkillDto> skills = skillService.findByProjectId(project.getId());
@@ -191,4 +194,6 @@ public class ProjectService {
                     return new ProjectSummaryDto(project, skills, interests);
                 });
     }
+
+
 }

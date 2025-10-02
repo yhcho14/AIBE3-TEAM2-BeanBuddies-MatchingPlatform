@@ -257,7 +257,7 @@ class ApiV1ProjectControllerTest {
                 .andExpect(jsonPath("$.workingCondition").value(project.getWorkingCondition()))
                 .andExpect(jsonPath("$.description").value(project.getDescription()))
                 .andExpect(jsonPath("$.deadline").value(Matchers.startsWith(project.getDeadline().toString().substring(0, 20))))
-                .andExpect(jsonPath("$.ownerName").value(project.getOwner().getName()))
+                .andExpect(jsonPath("$.ownerName").value(project.getClient().getMember().getName()))
                 .andExpect(jsonPath("$.status").value(project.getStatus().toString()))
                 .andExpect(jsonPath("$.createDate").value(Matchers.startsWith(project.getCreateDate().toString().substring(0, 20))))
                 .andExpect(jsonPath("$.modifyDate").value(Matchers.startsWith(project.getModifyDate().toString().substring(0, 20))));
@@ -320,7 +320,7 @@ class ApiV1ProjectControllerTest {
                     .andExpect(jsonPath(String.format("$[%d].workingCondition", i)).value(project.getWorkingCondition()))
                     .andExpect(jsonPath(String.format("$[%d].description", i)).value(project.getDescription()))
                     .andExpect(jsonPath(String.format("$[%d].deadline", i), Matchers.startsWith(project.getDeadline().toString().substring(0, 20))))
-                    .andExpect(jsonPath(String.format("$[%d].ownerName", i)).value(project.getOwner().getName()))
+                    .andExpect(jsonPath(String.format("$[%d].ownerName", i)).value(project.getClient().getMember().getName()))
                     .andExpect(jsonPath(String.format("$[%d].status", i)).value(project.getStatus().toString()))
                     .andExpect(jsonPath(String.format("$[%d].createDate", i), Matchers.startsWith(project.getCreateDate().toString().substring(0, 20))))
                     .andExpect(jsonPath(String.format("$[%d].modifyDate", i), Matchers.startsWith(project.getModifyDate().toString().substring(0, 20))));
@@ -423,7 +423,7 @@ class ApiV1ProjectControllerTest {
                 .andExpect(jsonPath("$.data.content[0].title").value(expectedProject.getTitle()))
                 .andExpect(jsonPath("$.data.content[0].summary").value(expectedProject.getSummary()))
                 .andExpect(jsonPath("$.data.content[0].status").value(expectedProject.getStatus().toString()))
-                .andExpect(jsonPath("$.data.content[0].ownerName").value(expectedProject.getOwner().getName()))
+                .andExpect(jsonPath("$.data.content[0].ownerName").value(expectedProject.getClient().getMember().getName()))
                 .andExpect(jsonPath("$.data.content[0].duration").value(expectedProject.getDuration()))
                 .andExpect(jsonPath("$.data.content[0].price").value(expectedProject.getPrice().doubleValue()))
                 .andExpect(jsonPath("$.data.content[0].deadline").value(expectedProject.getDeadline().toLocalDate().toString()))

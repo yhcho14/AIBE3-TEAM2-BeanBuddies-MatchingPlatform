@@ -1,5 +1,6 @@
 package com.back.domain.project.project.controller;
 
+import com.back.domain.client.client.entity.Client;
 import com.back.domain.common.interest.dto.InterestDto;
 import com.back.domain.common.interest.service.InterestService;
 import com.back.domain.common.skill.dto.SkillDto;
@@ -37,9 +38,10 @@ public class ApiV1ProjectController {
     public ApiResponse<ProjectDto> write(@Valid @RequestBody ProjectWriteReqBody reqBody) {
         // 임시로 회원 데이터 1개 가져옴
         Member member = memberService.findByUsername("client1").get();
+        Client client = member.getClient();
 
         Project project = projectService.create(
-                member,
+                client,
                 reqBody.title(),
                 reqBody.summary(),
                 reqBody.price(),

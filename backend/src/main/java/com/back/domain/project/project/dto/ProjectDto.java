@@ -42,7 +42,7 @@ public record ProjectDto(
                 project.getStatus(),
                 project.getCreateDate(),
                 project.getModifyDate(),
-                project.getOwner().getName(),
+                project.getClient().getMember().getName(),
                 skills,
                 interests
         );

@@ -1,5 +1,7 @@
 package com.back.global.initdata;
 
+import com.back.domain.client.client.entity.Client;
+import com.back.domain.client.client.service.ClientService;
 import com.back.domain.common.interest.service.InterestService;
 import com.back.domain.common.skill.service.SkillService;
 import com.back.domain.member.member.entity.Member;
@@ -26,6 +28,7 @@ public class BaseInitData {
     private BaseInitData self;
 
     private final MemberService memberService;
+    private final ClientService clientService;
     private final ProjectService projectService;
     private final SkillService skillService;
     private final InterestService interestService;
@@ -83,8 +86,10 @@ public class BaseInitData {
         List<Long> skillIds3 = List.of(1L, 2L, 3L);
         List<Long> interestIds3 = List.of(1L, 2L, 3L);
 
-        Member client1 = memberService.findByUsername("client1").get();
-        Member client2 = memberService.findByUsername("client2").get();
+        Member clientMember1 = memberService.findByUsername("client1").get();
+        Client client1 = clientService.findById(clientMember1.getId());
+        Member clientMember2 = memberService.findByUsername("client2").get();
+        Client client2 = clientService.findById(clientMember2.getId());
 
         projectService.create(
                 client2,
