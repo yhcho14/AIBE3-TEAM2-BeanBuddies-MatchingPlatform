@@ -40,3 +40,4 @@ out/
 ### Custom ###
 dv_test.mv.db
 dv_test.trace.db
+application-secret.yml

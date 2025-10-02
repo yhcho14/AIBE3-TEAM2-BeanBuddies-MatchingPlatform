@@ -26,7 +26,7 @@ public class MemberControllerTest {
     @Autowired
     private MockMvc mvc;
     @Autowired
-    private MemberService userService;
+    private MemberService memberService;
 
     @Test
     @DisplayName("회원가입 성공")
@@ -34,7 +34,7 @@ public class MemberControllerTest {
 
         ResultActions resultActions = mvc
                 .perform(
-                        post("/users")
+                        post("/api/v1/members")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content("""
                                         {
@@ -49,7 +49,7 @@ public class MemberControllerTest {
                 )
                 .andDo(print());
 
-        Member member = userService.findByUsername("userNew").get();
+        Member member = memberService.findByUsername("userNew").get();
 
         resultActions
                 //실행처 확인
@@ -75,7 +75,7 @@ public class MemberControllerTest {
     void t2_join_exception() throws Exception {
 
         ResultActions resultActions = mvc.perform(
-                post("/users")
+                post("/api/v1/members")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -107,11 +107,11 @@ public class MemberControllerTest {
     @DisplayName("회원가입 실패 : 이미 존재하는 회원")
     void t3_join_exception() throws Exception {
 
-        userService.join("CLIENT", "유저new", "userNew", "1234", "1234", "test@test.com");
+        memberService.join("CLIENT", "유저new", "userNew", "1234", "1234", "test@test.com");
 
         //이미 사용중인 아이디로 회원가입
         ResultActions resultActions = mvc.perform(
-                post("/users")
+                post("/api/v1/members")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -143,7 +143,7 @@ public class MemberControllerTest {
     void t4_join_exception() throws Exception {
 
         ResultActions resultActions = mvc.perform(
-                post("/users")
+                post("/api/v1/members")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {

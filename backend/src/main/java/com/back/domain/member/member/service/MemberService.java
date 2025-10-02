@@ -64,4 +64,10 @@ public class MemberService {
         member.changeStatus(status);
         return member;
     }
+
+    public void checkPassword(Member member, String password) {
+        if(!passwordEncoder.matches(password, member.getPassword())) {
+            throw new ServiceException("401-2", "비밀번호가 일치하지 않습니다.");
+        }
+    }
 }

@@ -6,14 +6,14 @@ import com.back.domain.member.member.entity.Member;
 
 import java.time.LocalDateTime;
 
-public record MemberJoinResp(
+public record MemberDto(
         long id,
         String name,
         Role role,
         MemberStatus status,
         LocalDateTime createDate
 ) {
-    public MemberJoinResp(Member member) {
+    public MemberDto(Member member) {
         this(
                 member.getId(),
                 member.getName(),
