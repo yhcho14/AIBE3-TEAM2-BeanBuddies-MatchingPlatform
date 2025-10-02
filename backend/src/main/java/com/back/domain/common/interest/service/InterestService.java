@@ -30,4 +30,8 @@ public class InterestService {
         Interest interest = new Interest(name);
         interestRepository.save(interest);
     }
+
+    public List<Interest> findAllById(List<Long> interests) {
+        return interestRepository.findAllById(interests);
+    }
 }
