@@ -28,9 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -170,7 +168,6 @@ public class ProjectService {
     public Page<ProjectSummaryDto> search(ProjectSearchDto searchDto, Pageable pageable) {
         Specification<Project> spec = (root, query, cb) -> cb.conjunction();
 
-        // 1. Project 자체 조건
         if (!searchDto.isEmpty()) {
             if (searchDto.keyword() != null && !searchDto.keyword().isBlank()) {
                 spec = spec.and(ProjectSpec.hasKeyword(searchDto.keywordType(), searchDto.keyword()));
@@ -178,32 +175,12 @@ public class ProjectService {
             if (searchDto.status() != null) {
                 spec = spec.and(ProjectSpec.hasStatus(searchDto.status()));
             }
-        }
-
-        // 2. Skill 조건 (AND)
-        if (searchDto.skillIds() != null && !searchDto.skillIds().isEmpty()) {
-            List<Long> projectIdsWithAllSkills = projectSkillRepository.findAll().stream()
-                    .collect(Collectors.groupingBy(ps -> ps.getProject().getId(),
-                            Collectors.mapping(ps -> ps.getSkill().getId(), Collectors.toSet())))
-                    .entrySet().stream()
-                    .filter(e -> e.getValue().containsAll(searchDto.skillIds()))
-                    .map(Map.Entry::getKey)
-                    .toList();
-
-            spec = spec.and((root, query, cb) -> root.get("id").in(projectIdsWithAllSkills));
-        }
-
-        // 3. Interest 조건 (AND)
-        if (searchDto.interestIds() != null && !searchDto.interestIds().isEmpty()) {
-            List<Long> projectIdsWithAllInterests = projectInterestRepository.findAll().stream()
-                    .collect(Collectors.groupingBy(pi -> pi.getProject().getId(),
-                            Collectors.mapping(pi -> pi.getInterest().getId(), Collectors.toSet())))
-                    .entrySet().stream()
-                    .filter(e -> e.getValue().containsAll(searchDto.interestIds()))
-                    .map(Map.Entry::getKey)
-                    .toList();
-
-            spec = spec.and((root, query, cb) -> root.get("id").in(projectIdsWithAllInterests));
+            if (searchDto.skillIds() != null && !searchDto.skillIds().isEmpty()) {
+                spec = spec.and(ProjectSpec.hasSkills(searchDto.skillIds()));
+            }
+            if (searchDto.interestIds() != null && !searchDto.interestIds().isEmpty()) {
+                spec = spec.and(ProjectSpec.hasInterests(searchDto.interestIds()));
+            }
         }
 
         // 4. 조회 후 DTO 변환
@@ -214,7 +191,4 @@ public class ProjectService {
                     return new ProjectSummaryDto(project, skills, interests);
                 });
     }
-
-
-
 }
