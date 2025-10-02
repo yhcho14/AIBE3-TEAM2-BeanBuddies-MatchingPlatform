@@ -50,4 +50,21 @@ public class Freelancer {
 
     @OneToMany(mappedBy = "freelancer")
     private List<FreelancerInterest> interests = new ArrayList<>();
+
+    public Freelancer(Member member) {
+        this.member = member;
+    }
+
+    public Freelancer(Member member, String job, String freelancerEmail, String comment, Map<String, Integer> career) {
+        this.member = member;
+        this.job = job;
+        this.freelancerEmail = freelancerEmail;
+        this.comment = comment;
+        this.career = career;
+        this.ratingAvg = 0.0f;
+    }
+
+    public void join(Member member) {
+        this.member = member;
+    }
 }
