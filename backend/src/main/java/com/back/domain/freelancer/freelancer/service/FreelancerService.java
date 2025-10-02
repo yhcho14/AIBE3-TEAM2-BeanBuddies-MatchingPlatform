@@ -1,13 +1,12 @@
 package com.back.domain.freelancer.freelancer.service;
 
 import com.back.domain.freelancer.freelancer.dto.FreelancerFilterDto;
-import com.back.domain.freelancer.freelancer.dto.FreelancerSummaryDto;
-import com.back.domain.freelancer.freelancer.dto.FreelancerUpdateFormDto;
+import com.back.domain.freelancer.freelancer.dto.FreelancerSummary;
 import com.back.domain.freelancer.freelancer.entity.Freelancer;
 import com.back.domain.freelancer.freelancer.repository.FreelancerRepository;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,8 +19,22 @@ public class FreelancerService {
 
     private final FreelancerRepository freelancerRepository;
 
+    public Freelancer findById(Long id) {
+        return freelancerRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 프리랜서입니다."));
+    }
+
+    @Transactional
+    public Freelancer updateFreelancer(Long id, String job, String freelancerEmail,
+                                 String comment, Map<String, Integer> career) {
+        Freelancer freelancer = findById(id);
+        freelancer.updateInfo(job, freelancerEmail, comment, career);
+
+        return freelancerRepository.save(freelancer);
+    }
+
     @Transactional(readOnly = true)
-    public Page<FreelancerSummaryDto> findAll(FreelancerFilterDto filter, Pageable page) {
+    public Page<FreelancerSummary> findAll(FreelancerFilterDto filter, Pageable page) {
         int pageNumber = page.getPageNumber();
         int pageSize = page.getPageSize();
 
@@ -30,15 +43,7 @@ public class FreelancerService {
         return convertToSummary(freelancers);
     }
 
-    private Page<FreelancerSummaryDto> convertToSummary(Page<Freelancer> freelancers) {
-        return freelancers.map(FreelancerSummaryDto::new);
-    }
-
-    public void updateFreelancer(Long id,
-                                 String job,
-                                 String freelancerEmail,
-                                 String comment,
-                                 Map<String, Integer> career
-    ) {
+    private Page<FreelancerSummary> convertToSummary(Page<Freelancer> freelancers) {
+        return freelancers.map(FreelancerSummary::new);
     }
 }

@@ -2,8 +2,7 @@ package com.back.domain.freelancer.freelancer.dto;
 
 import java.util.Map;
 
-public record FreelancerUpdateFormDto(
-        Long id,
+public record FreelancerUpdateForm(
         String job,
         String freelancerEmail,
         String comment,

@@ -1,5 +1,6 @@
 package com.back.domain.member.member.entity;
 
+import com.back.domain.client.client.entity.Client;
 import com.back.domain.freelancer.freelancer.entity.Freelancer;
 import com.back.domain.member.member.constant.MemberStatus;
 import com.back.domain.member.member.constant.Role;
@@ -45,6 +46,9 @@ public class Member extends BaseEntity {
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Freelancer freelancer;
 
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Client client;
+
     public Member(String role, String name, String username, String password, String email) {
         this.role = Role.valueOf(role);
         this.name = name;
@@ -57,8 +61,13 @@ public class Member extends BaseEntity {
     // Freelancer 등록 메서드 추가
     public void registerFreelancer(Freelancer freelancer) {
         this.freelancer = freelancer;
-        this.role = Role.FREELANCER;
         freelancer.join(this);
+    }
+
+    // Client 등록 메서드 추가
+    public void registerClient(Client client) {
+        this.client = client;
+        client.join(this);
     }
 
     public void changeStatus(String status) {

@@ -5,17 +5,17 @@ import com.back.domain.freelancer.freelancer.entity.Freelancer;
 import com.back.domain.freelancer.join.entity.FreelancerSkill;
 import java.util.List;
 
-public record FreelancerSummaryDto(
+public record FreelancerSummary(
         String name,
         Long id,
         String job,
         float ratingAvg,
         List<SkillDto> skills
 ) {
-    public FreelancerSummaryDto(Freelancer freelancer) {
+    public FreelancerSummary(Freelancer freelancer) {
         this(
                 freelancer.getMember().getName(),
-                freelancer.getId(),
+                freelancer.getMember().getId(),
                 freelancer.getJob(),
                 freelancer.getRatingAvg(),
                 freelancer.getSkills().stream()

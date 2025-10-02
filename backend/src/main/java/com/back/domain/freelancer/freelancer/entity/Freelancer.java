@@ -55,16 +55,17 @@ public class Freelancer {
         this.member = member;
     }
 
-    public Freelancer(Member member, String job, String freelancerEmail, String comment, Map<String, Integer> career) {
+    public void join(Member member) {
         this.member = member;
+    }
+
+    // 프리랜서 정보 수정
+    // NOTE : 현재 Freelancer의 대부분의 필드는 null 허용이므로, null 체크는 하지 않음.
+    // 다만 null 비허용으로 하고 초기 생성시, 빈 문자열로 초기화하는 방안도 고려할 수 있음.
+    public void updateInfo(String job, String freelancerEmail, String comment, Map<String, Integer> career) {
         this.job = job;
         this.freelancerEmail = freelancerEmail;
         this.comment = comment;
         this.career = career;
-        this.ratingAvg = 0.0f;
-    }
-
-    public void join(Member member) {
-        this.member = member;
     }
 }

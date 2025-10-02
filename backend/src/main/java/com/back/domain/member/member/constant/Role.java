@@ -1,5 +1,6 @@
 package com.back.domain.member.member.constant;
 
+import com.back.domain.member.member.entity.Member;
 import org.springframework.util.StringUtils;
 
 public enum Role {
@@ -13,7 +14,11 @@ public enum Role {
         this.description = description;
     }
 
-    public static boolean isFreelancer(String description) {
-        return Role.FREELANCER.description.equalsIgnoreCase(description);
+    public static boolean isFreelancer(Member member) {
+        return member.getRole() == Role.FREELANCER;
+    }
+
+    public static boolean isClient(Member member) {
+        return member.getRole() == Role.CLIENT;
     }
 }

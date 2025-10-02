@@ -1,7 +1,7 @@
 package com.back.domain.member.member.service;
 
+import com.back.domain.client.client.entity.Client;
 import com.back.domain.freelancer.freelancer.entity.Freelancer;
-import com.back.domain.freelancer.freelancer.repository.FreelancerRepository;
 import com.back.domain.member.member.constant.Role;
 import com.back.domain.member.member.entity.Member;
 import com.back.domain.member.member.repository.MemberRepository;
@@ -38,9 +38,14 @@ public class MemberService {
         //DTO -> ENTITY 변환
         Member member = new Member(role, name, username, encodedPassword, email);
 
-        if (Role.isFreelancer(role)) {
+        //회원 유형에 따른 엔티티 등록
+        if (Role.isFreelancer(member)) {
             Freelancer freelancer = new Freelancer(member);
             member.registerFreelancer(freelancer);
+        }
+        if (Role.isClient(member)) {
+            Client client = new Client(member);
+            member.registerClient(client);
         }
 
         //DB 반영 후 반환
