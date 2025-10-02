@@ -59,10 +59,10 @@ class ClientControllerTest {
                 .andExpect(handler().methodName("updateClient"))
 
                 //상태 코드 확인
-                .andExpect(status().isNoContent())
+                .andExpect(status().isOk())
 
                 //응답 데이터 확인
-                .andExpect(jsonPath("$.resultCode").value("204"))
+                .andExpect(jsonPath("$.resultCode").value("200"))
                 .andExpect(jsonPath("$.msg").value("클라이언트 정보 변경"))
                 .andExpect(jsonPath("$.data.id").value(id))
                 .andExpect(jsonPath("$.data.companySize").value("대기업"))
