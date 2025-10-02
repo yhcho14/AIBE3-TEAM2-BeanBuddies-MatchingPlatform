@@ -1,12 +1,10 @@
 package com.back.domain.freelancer.freelancer.controller;
 
 import com.back.domain.freelancer.freelancer.dto.FreelancerFilterDto;
-import com.back.domain.freelancer.freelancer.dto.FreelancerSummaryDto;
-import com.back.domain.freelancer.freelancer.dto.FreelancerUpdateFormDto;
-import com.back.domain.freelancer.freelancer.entity.Freelancer;
+import com.back.domain.freelancer.freelancer.dto.FreelancerSummary;
+import com.back.domain.freelancer.freelancer.dto.FreelancerUpdateForm;
 import com.back.domain.freelancer.freelancer.service.FreelancerService;
 import com.back.global.response.ApiResponse;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +23,7 @@ public class FreelancerController {
     private final FreelancerService freelancerService;
 
     @PutMapping
-    public ApiResponse<FreelancerUpdateFormDto> updateFreelancer(FreelancerUpdateFormDto info) {
+    public ApiResponse<FreelancerUpdateForm> updateFreelancer(FreelancerUpdateForm info) {
         freelancerService.updateFreelancer(
                 info.id(),
                 info.job(),
@@ -35,7 +33,7 @@ public class FreelancerController {
         );
 
         return new ApiResponse<>(
-                "201",
+                "204",
                 "프리랜서 정보 변경",
                 // TODO : 변경된 정보 응답
                 null
@@ -43,12 +41,12 @@ public class FreelancerController {
     }
 
     @GetMapping
-    public ApiResponse<Page<FreelancerSummaryDto>> getFreelancers(
+    public ApiResponse<Page<FreelancerSummary>> getFreelancers(
             FreelancerFilterDto filter,
             @PageableDefault(size = 20, sort = "ratingAvg", direction = Sort.Direction.DESC)
             Pageable pageable
     ) {
-        Page<FreelancerSummaryDto> result = freelancerService.findAll(filter, pageable);
+        Page<FreelancerSummary> result = freelancerService.findAll(filter, pageable);
 
         return new ApiResponse<>(
                 "200",

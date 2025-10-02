@@ -6,11 +6,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.back.domain.freelancer.freelancer.dto.FreelancerSummaryDto;
+import com.back.domain.freelancer.freelancer.dto.FreelancerSummary;
 import com.back.domain.freelancer.freelancer.service.FreelancerService;
 import com.back.domain.member.member.service.MemberService;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +63,7 @@ class FreelancerControllerTest {
                 .andDo(print());
 
         // TODO: 데이터 확인
-        Page<FreelancerSummaryDto> freelancers = freelancerService.findAll(null, PageRequest.of(0, 20));
+        Page<FreelancerSummary> freelancers = freelancerService.findAll(null, PageRequest.of(0, 20));
 
         resultActions
                 .andExpect(jsonPath("$.resultCode").value("200"))
