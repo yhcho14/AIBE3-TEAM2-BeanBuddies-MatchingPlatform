@@ -51,7 +51,7 @@ public class AuthService {
         return jwtProvider.generateAccessToken(claims);
     }
 
-    String genRefreshToken(Member member) {
+    private String genRefreshToken(Member member) {
 
         //claim 설정 (아이디)
         long id = member.getId();
