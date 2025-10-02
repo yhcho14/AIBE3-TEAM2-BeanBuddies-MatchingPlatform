@@ -31,10 +31,10 @@ class ClientControllerTest {
     private ClientService clientService;
 
     @Test
-    @DisplayName("프리랜서 정보 업데이트")
+    @DisplayName("프리랜서 정보 업데이트 - 성공")
     void t1() throws Exception {
         Long id = 2L;
-        Client freelancers = clientService.findById(2L);
+        Client client = clientService.findById(2L);
 
         ResultActions resultActions = mvc
                 .perform(

@@ -43,7 +43,7 @@ public class FreelancerController {
         FreelancerUpdateResponse response = new FreelancerUpdateResponse(freelancer);
 
         return new ApiResponse<>(
-                "204",
+                "200",
                 "프리랜서 정보 변경",
                 response
         );

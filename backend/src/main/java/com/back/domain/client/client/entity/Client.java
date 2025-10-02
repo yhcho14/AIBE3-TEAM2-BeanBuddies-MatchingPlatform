@@ -43,6 +43,8 @@ public class Client {
     }
 
     // 클라이언트 정보 수정
+    // NOTE : 현재 Client의 대부분의 필드는 null 허용이므로, null 체크는 하지 않음.
+    // 다만 null 비허용으로 하고 초기 생성시, 빈 문자열로 초기화하는 방안도 고려할 수 있음.
     public void update(String companySize, String companyDescription, String representative,
                        String businessNo, String companyPhone, String companyEmail) {
         this.companySize = companySize;

@@ -78,7 +78,7 @@ class FreelancerControllerTest {
     }
 
     @Test
-    @DisplayName("프리랜서 정보 업데이트")
+    @DisplayName("프리랜서 정보 업데이트 - 성공")
     void t2() throws Exception {
         Page<FreelancerSummary> freelancers = freelancerService.findAll(null, PageRequest.of(0, 20));
         FreelancerSummary freelancerSummary = freelancers.stream().findFirst().orElseThrow(() -> new RuntimeException("프리랜서 없음"));
@@ -95,7 +95,7 @@ class FreelancerControllerTest {
                                                 "comment" : "안녕하세요",
                                                 "career" : {"Java": 5, "Spring": 4, "AWS": 3}
                                         }
-                                        """.formatted(id))
+                                        """)
                 )
                 .andDo(print());
 

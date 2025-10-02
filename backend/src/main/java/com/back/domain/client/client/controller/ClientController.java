@@ -36,7 +36,7 @@ public class ClientController {
         ClientUpdateResponse response = new ClientUpdateResponse(client);
 
         return new ApiResponse<>(
-                "204",
+                "200",
                 "클라이언트 정보 변경",
                 response
         );
