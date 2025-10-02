@@ -30,8 +30,8 @@ public class JwtProvider {
         this.refreshExpireMillis = refreshExpireSeconds * 1000L;
     }
 
-    // 토큰 생성
-    public String generateAccessToken(Map<String, Object> claims) {
+    // AccessToken 생성
+    public String genAccessToken(Map<String, Object> claims) {
         Date issuedAt = new Date();
         Date expiration = new Date(issuedAt.getTime() + accessExpireMillis);
 
@@ -45,8 +45,8 @@ public class JwtProvider {
                 .compact();
     }
 
-    // 토큰 생성
-    public String generateRefreshToken(Map<String, Object> claims) {
+    // RefreshToken 생성
+    public String genRefreshToken(Map<String, Object> claims) {
         Date issuedAt = new Date();
         Date expiration = new Date(issuedAt.getTime() + refreshExpireMillis);
 

@@ -48,7 +48,7 @@ public class AuthService {
 
         Map<String, Object> claims = Map.of("id", id, "name", name, "role", role.name(), "status", status.name());
 
-        return jwtProvider.generateAccessToken(claims);
+        return jwtProvider.genAccessToken(claims);
     }
 
     private String genRefreshToken(Member member) {
@@ -58,7 +58,7 @@ public class AuthService {
 
         Map<String, Object> claims = Map.of("id", id);
 
-        return jwtProvider.generateRefreshToken(claims);
+        return jwtProvider.genRefreshToken(claims);
     }
 
 }
