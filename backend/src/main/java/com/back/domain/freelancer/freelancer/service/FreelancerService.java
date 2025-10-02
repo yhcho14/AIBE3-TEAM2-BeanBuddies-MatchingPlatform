@@ -2,9 +2,12 @@ package com.back.domain.freelancer.freelancer.service;
 
 import com.back.domain.freelancer.freelancer.dto.FreelancerFilterDto;
 import com.back.domain.freelancer.freelancer.dto.FreelancerSummaryDto;
+import com.back.domain.freelancer.freelancer.dto.FreelancerUpdateFormDto;
 import com.back.domain.freelancer.freelancer.entity.Freelancer;
 import com.back.domain.freelancer.freelancer.repository.FreelancerRepository;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,5 +32,13 @@ public class FreelancerService {
 
     private Page<FreelancerSummaryDto> convertToSummary(Page<Freelancer> freelancers) {
         return freelancers.map(FreelancerSummaryDto::new);
+    }
+
+    public void updateFreelancer(Long id,
+                                 String job,
+                                 String freelancerEmail,
+                                 String comment,
+                                 Map<String, Integer> career
+    ) {
     }
 }

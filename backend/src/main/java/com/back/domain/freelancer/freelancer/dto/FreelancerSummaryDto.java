@@ -6,6 +6,7 @@ import com.back.domain.freelancer.join.entity.FreelancerSkill;
 import java.util.List;
 
 public record FreelancerSummaryDto(
+        String name,
         Long id,
         String job,
         float ratingAvg,
@@ -13,6 +14,7 @@ public record FreelancerSummaryDto(
 ) {
     public FreelancerSummaryDto(Freelancer freelancer) {
         this(
+                freelancer.getMember().getName(),
                 freelancer.getId(),
                 freelancer.getJob(),
                 freelancer.getRatingAvg(),

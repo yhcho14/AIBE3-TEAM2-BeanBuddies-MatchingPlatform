@@ -1,13 +1,16 @@
 package com.back.domain.member.member.service;
 
+import com.back.domain.freelancer.freelancer.entity.Freelancer;
+import com.back.domain.freelancer.freelancer.repository.FreelancerRepository;
+import com.back.domain.member.member.constant.Role;
 import com.back.domain.member.member.entity.Member;
 import com.back.domain.member.member.repository.MemberRepository;
 import com.back.global.exception.ServiceException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,7 +18,9 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public Member join(String role, String name, String username, String password, String passwordConfirm, String email) {
+    @Transactional
+    public Member join(String role, String name, String username, String password, String passwordConfirm,
+                       String email) {
         //이미 사용중인 아이디인지 확인
         memberRepository.findByUsername(username)
                 .ifPresent(_member -> {
@@ -32,6 +37,11 @@ public class MemberService {
 
         //DTO -> ENTITY 변환
         Member member = new Member(role, name, username, encodedPassword, email);
+
+        if (Role.isFreelancer(role)) {
+            Freelancer freelancer = new Freelancer(member);
+            member.registerFreelancer(freelancer);
+        }
 
         //DB 반영 후 반환
         return memberRepository.save(member);
