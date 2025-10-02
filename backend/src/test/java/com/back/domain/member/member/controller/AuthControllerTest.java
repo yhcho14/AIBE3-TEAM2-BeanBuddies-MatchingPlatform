@@ -2,6 +2,7 @@ package com.back.domain.member.member.controller;
 
 import com.back.domain.member.member.entity.Member;
 import com.back.domain.member.member.service.MemberService;
+import jakarta.servlet.http.Cookie;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -29,7 +31,7 @@ public class AuthControllerTest {
     private MemberService memberService;
 
     @Test
-    @DisplayName("로그인 성공")
+    @DisplayName("로그인 성공 - 헤더, 쿠키 검증")
     void t1_login() throws Exception {
 
         ResultActions resultActions = mvc
@@ -39,7 +41,7 @@ public class AuthControllerTest {
                                 .content("""
                                         {
                                                 "username" : "client1",
-                                                "password" : "client1"
+                                                "password" : "1234"
                                         }
                                         """)
                 )
@@ -62,8 +64,18 @@ public class AuthControllerTest {
                 .andExpect(jsonPath("$.data.name").value(member.getName()))
                 .andExpect(jsonPath("$.data.role").value(member.getRole().name()))
                 .andExpect(jsonPath("$.data.status").value(member.getStatus().name()))
-                .andExpect(jsonPath("$.data.createDate").value(Matchers.startsWith(member.getCreateDate().toString().substring(0, 20))));
+                .andExpect(jsonPath("$.data.createDate").value(Matchers.startsWith(member.getCreateDate().toString().substring(0, 20))))
 
+                //헤더 확인
+                .andExpect(header().exists("Authorization"))
+                .andExpect(header().string("Authorization", Matchers.startsWith("Bearer ")))
+
+                //쿠키 확인
+                .andExpect(result -> {
+                    Cookie refreshToken = result.getResponse().getCookie("refreshToken");
+                    assertThat(refreshToken.getPath()).isEqualTo("/");
+                    assertThat(refreshToken.getAttribute("HttpOnly")).isEqualTo("true");
+                });
     }
 
     @Test
@@ -109,7 +121,7 @@ public class AuthControllerTest {
                                 .content("""
                                         {
                                                 "username" : "client1",
-                                                "password" : "1234"
+                                                "password" : "qwerqwer"
                                         }
                                         """)
                 )
