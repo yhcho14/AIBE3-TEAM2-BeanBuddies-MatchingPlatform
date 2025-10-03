@@ -61,7 +61,7 @@ public class AuthTestController {
     }
 
     // 프리랜서만 접근 가능 + ACTIVE 상태 체크
-    @GetMapping("/auth/freelance")
+    @GetMapping("/auth/freelancer")
     @CheckActive
     public ApiResponse<MemberDto> freelanceEndpoint() {
         CustomUserDetails user = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
