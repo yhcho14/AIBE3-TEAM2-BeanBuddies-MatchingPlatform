@@ -1,0 +1,89 @@
+package com.back.domain.member.member.controller;
+
+import com.back.domain.member.member.dto.MemberDto;
+import com.back.domain.member.member.entity.Member;
+import com.back.domain.member.member.service.MemberService;
+import com.back.global.response.ApiResponse;
+import com.back.global.security.CustomUserDetails;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * 인증/인가 기능 테스트용 Controller입니다.
+ *
+ * - Postman 및 테스트 케이스에서 정상 동작 확인용
+ * - 개발 중 예시로 활용 가능
+ *
+ * 개발 완료 후에는 반드시 제거해야 합니다.
+ */
+@RestController
+@RequestMapping("/api/v1/test")
+@RequiredArgsConstructor
+public class AuthTestController {
+
+    private final MemberService memberService;
+
+    // 인증 필요 없음
+    @GetMapping("/public")
+    public ApiResponse<Void> publicEndpoint() {
+        return new ApiResponse<>("200", "누구나 접근 가능");
+    }
+
+    // 인증된 사용자만 접근 가능 + ACTIVE 상태 체크
+    @GetMapping("/auth")
+    public ApiResponse<MemberDto> authenticatedUserEndpoint() {
+        CustomUserDetails user = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (!user.isActive()) {
+            return new ApiResponse<>("403-2", "비활성 계정입니다.");
+        }
+
+        return new ApiResponse<>("200", "인증된 사용자 접근 성공", new MemberDto(user));
+    }
+
+    // 클라이언트만 접근 가능 + ACTIVE 상태 체크
+    @GetMapping("/auth/client")
+    public ApiResponse<MemberDto> clientEndpoint() {
+        CustomUserDetails user = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (!user.isActive()) {
+            return new ApiResponse<>("403-2", "비활성 계정입니다.");
+        }
+
+        return new ApiResponse<>("200", "클라이언트 접근 성공", new MemberDto(user));
+    }
+
+    // 프리랜서만 접근 가능 + ACTIVE 상태 체크
+    @GetMapping("/auth/freelance")
+    public ApiResponse<MemberDto> freelanceEndpoint() {
+        CustomUserDetails user = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (!user.isActive()) {
+            return new ApiResponse<>("403-2", "비활성 계정입니다.");
+        }
+
+        return new ApiResponse<>("200", "프리랜서 접근 성공", new MemberDto(user));
+    }
+
+    // 관리자만 접근 가능
+    @GetMapping("/auth/admin")
+    public ApiResponse<MemberDto> adminEndpoint() {
+        CustomUserDetails user = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return new ApiResponse<>("200", "관리자 접근 성공", new MemberDto(user));
+    }
+
+    // 인증 정보를 통해 member 객체 조회
+    @GetMapping("/auth/me")
+    public ApiResponse<MemberDto> myInfo(@AuthenticationPrincipal CustomUserDetails user) {
+
+        // DB에서 실제 Member 객체 조회
+        Member member = memberService.findById(user.getId());
+
+        return new ApiResponse<>("200", "내 정보 조회 성공", new MemberDto(member));
+    }
+}
