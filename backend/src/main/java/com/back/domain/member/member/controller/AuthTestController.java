@@ -5,6 +5,7 @@ import com.back.domain.member.member.entity.Member;
 import com.back.domain.member.member.service.MemberService;
 import com.back.global.response.ApiResponse;
 import com.back.global.security.CustomUserDetails;
+import com.back.global.security.annotation.CheckActive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,6 +36,7 @@ public class AuthTestController {
 
     // 인증된 사용자만 접근 가능 + ACTIVE 상태 체크
     @GetMapping("/auth")
+    @CheckActive
     public ApiResponse<MemberDto> authenticatedUserEndpoint() {
         CustomUserDetails user = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -47,6 +49,7 @@ public class AuthTestController {
 
     // 클라이언트만 접근 가능 + ACTIVE 상태 체크
     @GetMapping("/auth/client")
+    @CheckActive
     public ApiResponse<MemberDto> clientEndpoint() {
         CustomUserDetails user = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -59,6 +62,7 @@ public class AuthTestController {
 
     // 프리랜서만 접근 가능 + ACTIVE 상태 체크
     @GetMapping("/auth/freelance")
+    @CheckActive
     public ApiResponse<MemberDto> freelanceEndpoint() {
         CustomUserDetails user = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
