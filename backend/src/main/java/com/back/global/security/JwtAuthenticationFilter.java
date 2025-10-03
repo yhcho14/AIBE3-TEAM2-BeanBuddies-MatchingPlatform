@@ -11,6 +11,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.List;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -60,7 +62,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         //accessToken이 없을 때 -> refreshToken 확인 후 재발급
         Claims accessClaims = jwtProvider.getClaims(accessToken, true);
         if(accessClaims == null) {
-            String refreshToken = cookieHelper.getCookieValue("refreshToekn", null);
+            String refreshToken = cookieHelper.getCookieValue("refreshToken", null);
+
             if(refreshToken == null || refreshToken.isBlank()) {
                 filterChain.doFilter(request, response);
                 return;
@@ -79,10 +82,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private Claims reIssueAccessToken(String refreshToken, HttpServletRequest request, HttpServletResponse response) {
         //refreshToken 추출 후 유효성 검사
         Claims refreshClaims = jwtProvider.getClaims(refreshToken, false);
+        log.info("RefreshToken Claims: {}", refreshClaims);
         if(refreshClaims == null) return null;
 
         //member 정보로 accessToken 재발급
-        Long memberId = refreshClaims.get("memberId", Long.class);
+        Long memberId = refreshClaims.get("id", Long.class);
         Member member = memberService.findById(memberId);
         String newAccessToken = authService.reissueAccessToken(member);
 
