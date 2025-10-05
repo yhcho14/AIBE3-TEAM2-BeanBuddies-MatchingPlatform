@@ -18,7 +18,7 @@ public class CheckActiveAspect {
         this.response = response;
     }
 
-    @Around("@annotation(com.back.global.security.annotation.CheckActive) || @within(com.back.global.security.annotation.CheckActive)")
+    @Around("@annotation(com.back.global.security.annotation.OnlyActiveMember) || @within(com.back.global.security.annotation.OnlyActiveMember)")
     public Object checkActive(ProceedingJoinPoint joinPoint) throws Throwable {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

@@ -1,5 +1,6 @@
 package com.back.global.security;
 
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -7,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+@Getter
 public class CustomUserDetails implements UserDetails {
 
     private final Long id;
@@ -38,23 +40,6 @@ public class CustomUserDetails implements UserDetails {
 
     public boolean isWithDrawn() {
         return status.equals("WITHDRAWN");
-    }
-
-    //getter
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public String getStatus() {
-        return status;
     }
 
     //사용하지 않는 getter

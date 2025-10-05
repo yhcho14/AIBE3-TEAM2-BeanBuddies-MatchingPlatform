@@ -18,6 +18,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
 
+/**
+ * 인증/인가 기능 임시 테스트용 컨트롤러입니다.
+ *
+ * - 구현한 인증/인가 기능을 테스트하기 위함
+ * - 테스트 케이스 작성 예시를 제공하기 위함
+ *
+ * 개발 완료 후에는 `AuthTestController`와 함께 제거해야 합니다.
+ */
 @ActiveProfiles("test")
 @SpringBootTest
 @AutoConfigureMockMvc
