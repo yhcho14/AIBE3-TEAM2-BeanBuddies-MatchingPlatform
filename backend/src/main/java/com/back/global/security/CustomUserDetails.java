@@ -1,6 +1,7 @@
 package com.back.global.security;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+@Slf4j
 @Getter
 public class CustomUserDetails implements UserDetails {
 
@@ -44,12 +46,16 @@ public class CustomUserDetails implements UserDetails {
 
     //사용하지 않는 getter
     @Override
+    @Deprecated
     public String getPassword() {
+        log.warn("getPassword() 호출됨 : JWT 기반 인증에서 호출되어서는 안 됩니다.");
         return "";
     }
 
     @Override
+    @Deprecated
     public String getUsername() {
+        log.warn("getUsername() 호출됨 : JWT 기반 인증에서 호출되어서는 안 됩니다.");
         return "";
     }
 }
