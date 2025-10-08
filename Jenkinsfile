@@ -60,26 +60,24 @@ pipeline {
                 // Jenkins Credentials에 등록한 SSH 키를 사용하여 배포 서버에 접속합니다.
                 sshagent(['yhcho-ssh']) {
                     sh """
-                        ssh -o StrictHostKeyChecking=no yhcho@192.168.50.35 \
-                        "docker stop ${APP_NAME} || true && docker rm ${APP_NAME} || true"
-                    """
-                    sh """
-                        ssh -o StrictHostKeyChecking=no yhcho@192.168.50.35 \
-                        "docker pull ${DOCKERHUB_USERNAME}/${APP_NAME}:${env.BUILD_NUMBER}"
-                    """
-                    sh """
-                        ssh -o StrictHostKeyChecking=no yhcho@192.168.50.35 \
-                        "docker run -d --name ${APP_NAME} -p 8080:8080 \
-                        -e SPRING_PROFILES_ACTIVE=prod \
-                        -e SPRING_DATASOURCE_URL=jdbc:mysql://${DB_HOST}:3306/${DB_NAME}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true \
-                        -e SPRING_DATASOURCE_USERNAME=${DB_USERNAME} \
-                        -e SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD} \
-                        -e SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.MySQLDialect \
-                        -e CUSTOM_JWT_ACCESSTOKEN_SECRETKEY=${JWT_ACCESS_KEY} \
-                        -e CUSTOM_JWT_ACCESSTOKEN_EXPIRESECONDS=3600 \
-                        -e CUSTOM_JWT_REFRESH_TOKEN_SECRETKEY=${JWT_REFRESH_KEY} \
-                        -e CUSTOM_JWT_REFRESH_TOKEN_EXPIRESECONDS=604800 \
-                        ${DOCKERHUB_USERNAME}/${APP_NAME}:${env.BUILD_NUMBER}"
+                        ssh -o StrictHostKeyChecking=no ${DEPLOY_USER}@${DEPLOY_HOST} << 'ENDSSH'
+
+                            docker stop ${APP_NAME} || true && docker rm ${APP_NAME} || true
+
+                            docker pull ${DOCKERHUB_USERNAME}/${APP_NAME}:${env.BUILD_NUMBER}
+
+                            docker run -d --name ${APP_NAME} -p 8080:8080 \\
+                                -e SPRING_PROFILES_ACTIVE=prod \\
+                                -e SPRING_DATASOURCE_URL=jdbc:mysql://${DB_HOST}:3306/${DB_NAME}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true \\
+                                -e SPRING_DATASOURCE_USERNAME=${DB_USERNAME} \\
+                                -e SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD} \\
+                                -e SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.MySQLDialect \\
+                                -e CUSTOM_JWT_ACCESSTOKEN_SECRETKEY=${JWT_ACCESS_KEY} \\
+                                -e CUSTOM_JWT_ACCESSTOKEN_EXPIRESECONDS=3600 \\
+                                -e CUSTOM_JWT_REFRESH_TOKEN_SECRETKEY=${JWT_REFRESH_KEY} \\
+                                -e CUSTOM_JWT_REFRESH_TOKEN_EXPIRESECONDS=604800 \\
+                                ${DOCKERHUB_USERNAME}/${APP_NAME}:${env.BUILD_NUMBER}
+                        ENDSSH
                     """
                 }
             }
