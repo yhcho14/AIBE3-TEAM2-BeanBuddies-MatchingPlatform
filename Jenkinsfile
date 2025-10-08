@@ -46,11 +46,11 @@ pipeline {
         stage('Deploy') {
             steps {
                 withCredentials([
-                    string(credentialsId: 'DB_URL', variable: 'DB_URL_SECRET'),
-                    string(credentialsId: 'DB_USERNAME', variable: 'DB_USERNAME_SECRET'),
-                    string(credentialsId: 'DB_PASSWORD', variable: 'DB_PASSWORD_SECRET'),
-                    string(credentialsId: 'JWT_ACCESS_KEY', variable: 'JWT_ACCESS_KEY_SECRET'),
-                    string(credentialsId: 'JWT_REFRESH_KEY', variable: 'JWT_REFRESH_KEY_SECRET')
+                    string(credentialsId: 'your-db-host', variable: 'DB_URL_SECRET'),
+                    string(credentialsId: 'db-username', variable: 'DB_USERNAME_SECRET'),
+                    string(credentialsId: 'db-password', variable: 'DB_PASSWORD_SECRET'),
+                    string(credentialsId: 'jwt-secret-key', variable: 'JWT_ACCESS_KEY_SECRET'),
+                    string(credentialsId: 'jwt-refresh-key', variable: 'JWT_REFRESH_KEY_SECRET')
                 ]) {
                     sshagent(['yhcho-ssh']) {
                         // Here Document(<<EOF) 대신 모든 명령어를 && 로 연결하여 하나의 명령어로 실행
