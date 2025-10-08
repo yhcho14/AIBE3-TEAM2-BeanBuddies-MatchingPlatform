@@ -41,46 +41,40 @@ pipeline {
             }
         }
 
+        // Jenkinsfile (Deploy stage 수정)
+
         stage('Deploy') {
             steps {
-                // withCredentials 블록으로 Jenkins에 등록된 Secret text를 환경 변수로 안전하게 주입합니다.
                 withCredentials([
-                    string(credentialsId: 'your-db-host', variable: 'DB_URL_SECRET'),
-                    string(credentialsId: 'db-username', variable: 'DB_USERNAME_SECRET'),
-                    string(credentialsId: 'db-password', variable: 'DB_PASSWORD_SECRET'),
-                    string(credentialsId: 'jwt-secret-key', variable: 'JWT_ACCESS_KEY_SECRET'),
-                    string(credentialsId: 'jwt-refresh-key', variable: 'JWT_REFRESH_KEY_SECRET')
+                    string(credentialsId: 'DB_URL', variable: 'DB_URL_SECRET'),
+                    string(credentialsId: 'DB_USERNAME', variable: 'DB_USERNAME_SECRET'),
+                    string(credentialsId: 'DB_PASSWORD', variable: 'DB_PASSWORD_SECRET'),
+                    string(credentialsId: 'JWT_ACCESS_KEY', variable: 'JWT_ACCESS_KEY_SECRET'),
+                    string(credentialsId: 'JWT_REFRESH_KEY', variable: 'JWT_REFRESH_KEY_SECRET')
                 ]) {
-                    // sshagent 블록으로 SSH 키를 사용하여 배포 서버에 접속합니다.
                     sshagent(['yhcho-ssh']) {
-                        // 하나의 SSH 세션에서 모든 배포 명령을 실행하여 효율성을 높입니다.
+                        // Here Document(<<EOF) 대신 모든 명령어를 && 로 연결하여 하나의 명령어로 실행
                         sh """
-                            ssh -o StrictHostKeyChecking=no yhcho@192.168.50.35 <<'EOF'
-                                # 기존 컨테이너가 있다면 중지하고 삭제합니다.
-                                docker stop ${APP_NAME} || true && docker rm ${APP_NAME} || true
-
-                                # 새로 빌드된 Docker 이미지를 가져옵니다.
-                                docker pull ${DOCKERHUB_USERNAME}/${APP_NAME}:${env.BUILD_NUMBER}
-
-                                # 환경 변수를 주입하여 새 컨테이너를 실행합니다.
+                            ssh -o StrictHostKeyChecking=no yhcho@192.168.50.35 " \\
+                                docker stop ${APP_NAME} || true && docker rm ${APP_NAME} || true && \\
+                                docker pull ${DOCKERHUB_USERNAME}/${APP_NAME}:${env.BUILD_NUMBER} && \\
                                 docker run -d --name ${APP_NAME} -p 8080:8080 \\
-                                -e SPRING_PROFILES_ACTIVE=prod \\
-                                -e SPRING_DATASOURCE_URL=${DB_URL_SECRET} \\
-                                -e SPRING_DATASOURCE_USERNAME=${DB_USERNAME_SECRET} \\
-                                -e SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD_SECRET} \\
-                                -e SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.MySQLDialect \\
-                                -e CUSTOM_JWT_ACCESSTOKEN_SECRETKEY=${JWT_ACCESS_KEY_SECRET} \\
-                                -e CUSTOM_JWT_ACCESSTOKEN_EXPIRESECONDS=3600 \\
-                                -e CUSTOM_JWT_REFRESHTOKEN_SECRETKEY=${JWT_REFRESH_KEY_SECRET} \\
-                                -e CUSTOM_JWT_REFRESHTOKEN_EXPIRESECONDS=604800 \\
-                                ${DOCKERHUB_USERNAME}/${APP_NAME}:${env.BUILD_NUMBER}
-                            'EOF'
+                                    -e SPRING_PROFILES_ACTIVE=prod \\
+                                    -e SPRING_DATASOURCE_URL=${DB_URL_SECRET} \\
+                                    -e SPRING_DATASOURCE_USERNAME=${DB_USERNAME_SECRET} \\
+                                    -e SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD_SECRET} \\
+                                    -e SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.MySQLDialect \\
+                                    -e CUSTOM_JWT_ACCESSTOKEN_SECRETKEY=${JWT_ACCESS_KEY_SECRET} \\
+                                    -e CUSTOM_JWT_ACCESSTOKEN_EXPIRESECONDS=3600 \\
+                                    -e CUSTOM_JWT_REFRESHTOKEN_SECRETKEY=${JWT_REFRESH_KEY_SECRET} \\
+                                    -e CUSTOM_JWT_REFRESHTOKEN_EXPIRESECONDS=604800 \\
+                                    ${DOCKERHUB_USERNAME}/${APP_NAME}:${env.BUILD_NUMBER}
+                            "
                         """
                     }
                 }
             }
         }
-    }
 
     post {
         always {
