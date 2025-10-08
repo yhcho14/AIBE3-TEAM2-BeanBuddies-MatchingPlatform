@@ -57,40 +57,35 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                withCredentials([
-                    string(credentialsId: DB_USERNAME_ID, variable: 'DB_USER_VAR'),
-                    string(credentialsId: DB_PASSWORD_ID, variable: 'DB_PASS_VAR'),
-                    string(credentialsId: JWT_ACCESS_KEY_ID, variable: 'JWT_ACCESS_VAR'),
-                    string(credentialsId: JWT_REFRESH_KEY_ID, variable: 'JWT_REFRESH_VAR')
-                ]) {
-                    sshagent([SSH_CREDENTIALS_ID]) {
-                        // ✅ Heredoc 대신, 전체 스크립트를 작은따옴표로 감싸서 전달합니다.
-                        sh """
-                            ssh -o StrictHostKeyChecking=no ${DEPLOY_USER}@${DEPLOY_HOST} '
-
-                                docker stop ${APP_NAME} || true
-                                docker rm ${APP_NAME} || true
-
-                                docker pull ${DOCKERHUB_USERNAME}/${APP_NAME}:${env.BUILD_NUMBER}
-
-                                docker run -d --name ${APP_NAME} -p 8080:8080 \\
-                                    -e SPRING_PROFILES_ACTIVE=prod \\
-                                    -e SPRING_DATASOURCE_URL="jdbc:mysql://${DB_HOST}:3306/${DB_NAME}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true" \\
-                                    -e SPRING_DATASOURCE_USERNAME=\$DB_USER_VAR \\
-                                    -e SPRING_DATASOURCE_PASSWORD=\$DB_PASS_VAR \\
-                                    -e SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.MySQLDialect \\
-                                    -e CUSTOM_JWT_ACCESSTOKEN_SECRETKEY=\$JWT_ACCESS_VAR \\
-                                    -e CUSTOM_JWT_ACCESSTOKEN_EXPIRESECONDS=3600 \\
-                                    -e CUSTOM_JWT_REFRESH_TOKEN_SECRETKEY=\$JWT_REFRESH_VAR \\
-                                    -e CUSTOM_JWT_REFRESH_TOKEN_EXPIRESECONDS=604800 \\
-                                    ${DOCKERHUB_USERNAME}/${APP_NAME}:${env.BUILD_NUMBER}
-                            '
-                        """
-                    }
+                // Jenkins Credentials에 등록한 SSH 키를 사용하여 배포 서버에 접속합니다.
+                sshagent(['yhcho-ssh']) {
+                    sh """
+                        ssh -o StrictHostKeyChecking=no yhcho@192.168.50.35 \
+                        "docker stop ${APP_NAME} || true && docker rm ${APP_NAME} || true"
+                    """
+                    sh """
+                        ssh -o StrictHostKeyChecking=no yhcho@192.168.50.35 \
+                        "docker pull ${DOCKERHUB_USERNAME}/${APP_NAME}:${env.BUILD_NUMBER}"
+                    """
+                    sh """
+                        ssh -o StrictHostKeyChecking=no yhcho@192.168.50.35 \
+                            "docker run -d --name ${APP_NAME} -p 8080:8080 \
+                            -e SPRING_PROFILES_ACTIVE=prod \
+                            -e SPRING_DATASOURCE_URL=jdbc:mysql://${DB_HOST}:3306/${DB_NAME}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true \
+                            -e SPRING_DATASOURCE_USERNAME=${DB_USERNAME} \
+                            -e SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD} \
+                            -e SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.MySQLDialect \
+                            -e CUSTOM_JWT_ACCESSTOKEN_SECRETKEY=${JWT_ACCESS_KEY} \
+                            -e CUSTOM_JWT_ACCESSTOKEN_EXPIRESECONDS=3600 \
+                            -e CUSTOM_JWT_REFRESH_TOKEN_SECRETKEY=${JWT_REFRESH_KEY} \
+                            -e CUSTOM_JWT_REFRESH_TOKEN_EXPIRESECONDS=604800 \
+                            ${DOCKERHUB_USERNAME}/${APP_NAME}:${env.BUILD_NUMBER}"
+                    """
                 }
             }
         }
     }
+
     post {
         always {
             // 빌드 중간 산물들을 정리합니다.
