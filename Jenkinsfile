@@ -61,7 +61,7 @@ pipeline {
                         -e SPRING_DATASOURCE_URL=jdbc:mysql://your-db-host:3306/db_dev \
                         -e SPRING_DATASOURCE_USERNAME=db-username \
                         -e SPRING_DATASOURCE_PASSWORD=db-password \
-                        -e JWT_SECRET_KEY=jwt-secret-key \
+                        -e CUSTOM_JWT_ACCESSTOKEN_SECRETKEY=jwt-secret-key \
                         ${DOCKERHUB_USERNAME}/${APP_NAME}:${env.BUILD_NUMBER}"
                     """
                 }
