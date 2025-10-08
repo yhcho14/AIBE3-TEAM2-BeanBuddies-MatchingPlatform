@@ -31,7 +31,7 @@ pipeline {
             steps {
                 script {
                     // Dockerfile을 사용하여 이미지를 빌드합니다. 태그는 빌드 번호를 사용합니다.
-                    def appImage = docker.build("${DOCKERHUB_USERNAME}/${APP_NAME}:${env.BUILD_NUMBER}")
+                    def appImage = docker.build("${DOCKERHUB_USERNAME}/${APP_NAME}:${env.BUILD_NUMBER}", './backend')
 
                     // Jenkins Credentials에 등록한 Docker Hub 인증 정보를 사용하여 로그인합니다.
                     docker.withRegistry('https://registry.hub.docker.com', 'yhcho-dockerhub') {
