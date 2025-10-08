@@ -8,6 +8,18 @@ pipeline {
         DOCKERHUB_USERNAME = 'yhcho14' // 본인의 Docker Hub 사용자 이름으로 변경
         APP_NAME = 'beanbuddies-matching-platform'
 
+        DEPLOY_HOST = '192.168.50.35'
+        DEPLOY_USER = 'yhcho'
+        DB_HOST = '192.168.50.35' // ✅ 여기에 실제 DB 호스트 IP를 입력합니다.
+        DB_NAME = 'db_dev'          // ✅ 여기에 실제 DB 스키마 이름을 입력합니다.
+
+        // --- Jenkins Credentials를 통해 민감 정보 안전하게 불러오기 ---
+        DOCKERHUB_CREDENTIALS_ID = 'yhcho-dockerhub'
+        SSH_CREDENTIALS_ID = 'yhcho-ssh'
+        DB_USERNAME = credentials('db-username')        // Jenkins에 생성한 Credential ID
+        DB_PASSWORD = credentials('db-password')        // Jenkins에 생성한 Credential ID
+        JWT_ACCESS_KEY = credentials('jwt-secret-key')  // Jenkins에 생성한 Credential ID
+        JWT_REFRESH_KEY = credentials('jwt-refresh-key')// Jenkins에 생성한 Credential ID
     }
 
     stages {
@@ -59,14 +71,14 @@ pipeline {
                         ssh -o StrictHostKeyChecking=no yhcho@192.168.50.35 \
                         "docker run -d --name ${APP_NAME} -p 8080:8080 \
                         -e SPRING_PROFILES_ACTIVE=prod \
-                        -e SPRING_DATASOURCE_URL=jdbc:mysql://192.168.50.35:3306/db_dev \
-                        -e SPRING_DATASOURCE_USERNAME=db-username \
-                        -e SPRING_DATASOURCE_PASSWORD=db-password \
+                        -e SPRING_DATASOURCE_URL=jdbc:mysql://${DB_HOST}:3306/${DB_NAME}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true \
+                        -e SPRING_DATASOURCE_USERNAME=${DB_USERNAME} \
+                        -e SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD} \
                         -e SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.MySQLDialect \
-                        -e CUSTOM_JWT_ACCESSTOKEN_SECRETKEY=jwt-secret-key \
-                        -e CUSTOM_JWT_ACCESSTOKEN_EXPIRESECONDS=3600\
-                        -e CUSTOM_JWT_REFRESHTOKEN_SECRETKEY=jwt-refresh-key \
-                        -e CUSTOM_JWT_REFRESHTOKEN_EXPIRESECONDS=604800 \
+                        -e CUSTOM_JWT_ACCESSTOKEN_SECRETKEY=${JWT_ACCESS_KEY} \
+                        -e CUSTOM_JWT_ACCESSTOKEN_EXPIRESECONDS=3600 \
+                        -e CUSTOM_JWT_REFRESH_TOKEN_SECRETKEY=${JWT_REFRESH_KEY} \
+                        -e CUSTOM_JWT_REFRESH_TOKEN_EXPIRESECONDS=604800 \
                         ${DOCKERHUB_USERNAME}/${APP_NAME}:${env.BUILD_NUMBER}"
                     """
                 }
