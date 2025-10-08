@@ -7,6 +7,7 @@ pipeline {
     environment {
         DOCKERHUB_USERNAME = 'yhcho14' // 본인의 Docker Hub 사용자 이름으로 변경
         APP_NAME = 'beanbuddies-matching-platform'
+
     }
 
     stages {
@@ -61,8 +62,9 @@ pipeline {
                         -e SPRING_DATASOURCE_URL=jdbc:mysql://your-db-host:3306/db_dev \
                         -e SPRING_DATASOURCE_USERNAME=db-username \
                         -e SPRING_DATASOURCE_PASSWORD=db-password \
-                        -e CUSTOM_JWT_ACCESSTOKEN_SECRETKEY=${jwt-secret-key} \
+                        -e CUSTOM_JWT_ACCESSTOKEN_SECRETKEY=jwt-secret-key \
                         -e CUSTOM_JWT_ACCESSTOKEN_EXPIRESECONDS=3600\
+                        -e CUSTOM_JWT_REFRESHTOKEN_SECRETKEY=jwt-refresh-key \
                         ${DOCKERHUB_USERNAME}/${APP_NAME}:${env.BUILD_NUMBER}"
                     """
                 }
