@@ -46,15 +46,15 @@ pipeline {
             steps {
                 // Jenkins Credentials에 등록한 SSH 키를 사용하여 배포 서버에 접속합니다.
                 sshagent(['yhcho-ssh']) {
-                    sh '''
+                    sh """
                         ssh -o StrictHostKeyChecking=no yhcho@192.168.50.35 \
                         "docker stop ${APP_NAME} || true && docker rm ${APP_NAME} || true"
-                    '''
-                    sh '''
+                    """
+                    sh """
                         ssh -o StrictHostKeyChecking=no yhcho@192.168.50.35 \
                         "docker pull ${DOCKERHUB_USERNAME}/${APP_NAME}:${env.BUILD_NUMBER}"
-                    '''
-                    sh '''
+                    """
+                    sh """
                         ssh -o StrictHostKeyChecking=no yhcho@192.168.50.35 \
                         "docker run -d --name ${APP_NAME} -p 8080:8080 \
                         -e SPRING_PROFILES_ACTIVE=prod \
@@ -63,7 +63,7 @@ pipeline {
                         -e SPRING_DATASOURCE_PASSWORD=db-password \
                         -e JWT_SECRET_KEY=jwt-secret-key \
                         ${DOCKERHUB_USERNAME}/${APP_NAME}:${env.BUILD_NUMBER}"
-                    '''
+                    """
                 }
             }
         }
