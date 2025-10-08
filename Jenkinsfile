@@ -65,6 +65,7 @@ pipeline {
                         -e CUSTOM_JWT_ACCESSTOKEN_SECRETKEY=jwt-secret-key \
                         -e CUSTOM_JWT_ACCESSTOKEN_EXPIRESECONDS=3600\
                         -e CUSTOM_JWT_REFRESHTOKEN_SECRETKEY=jwt-refresh-key \
+                        -e CUSTOM_JWT_REFRESHTOKEN_EXPIRESECONDS=604800 \
                         ${DOCKERHUB_USERNAME}/${APP_NAME}:${env.BUILD_NUMBER}"
                     """
                 }
