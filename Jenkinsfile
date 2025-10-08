@@ -60,7 +60,7 @@ pipeline {
                                 docker pull ${DOCKERHUB_USERNAME}/${APP_NAME}:${env.BUILD_NUMBER} && \\
                                 docker run -d --name ${APP_NAME} -p 8080:8080 \\
                                     -e SPRING_PROFILES_ACTIVE=prod \\
-                                    -e SPRING_DATASOURCE_URL=${DB_URL_SECRET} \\
+                                    -e SPRING_DATASOURCE_URL='jdbc:mysql://192.168.50.35:3306/db_dev' \\
                                     -e SPRING_DATASOURCE_USERNAME=${DB_USERNAME_SECRET} \\
                                     -e SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD_SECRET} \\
                                     -e SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.MySQLDialect \\
