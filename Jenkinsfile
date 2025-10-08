@@ -77,7 +77,7 @@ pipeline {
                                 -e CUSTOM_JWT_REFRESH_TOKEN_SECRETKEY=${JWT_REFRESH_KEY} \\
                                 -e CUSTOM_JWT_REFRESH_TOKEN_EXPIRESECONDS=604800 \\
                                 ${DOCKERHUB_USERNAME}/${APP_NAME}:${env.BUILD_NUMBER}
-                        ENDSSH
+ENDSSH
                     """
                 }
             }
