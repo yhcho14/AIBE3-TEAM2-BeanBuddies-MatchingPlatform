@@ -62,6 +62,7 @@ pipeline {
                         -e SPRING_DATASOURCE_USERNAME=db-username \
                         -e SPRING_DATASOURCE_PASSWORD=db-password \
                         -e CUSTOM_JWT_ACCESSTOKEN_SECRETKEY=jwt-secret-key \
+                        -e CUSTOM_JWT_ACCESSTOKEN_EXPIRESECONDS=3600\
                         ${DOCKERHUB_USERNAME}/${APP_NAME}:${env.BUILD_NUMBER}"
                     """
                 }
